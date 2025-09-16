@@ -1,0 +1,6 @@
+# This file is used by GraphQL IDE extensions to detect the project schema and propose autocompletion from it.
+# VSCode extension: https://marketplace.visualstudio.com/items?itemName=GraphQL.vscode-graphql
+# schema: "http://headlesswp.local/graphql"
+
+schema: "./graphql/generated/schema.gql"
+documents: "./{app,components,graphql,types,utils}/**/*.{gql,graphql,js,ts,jsx,tsx}"

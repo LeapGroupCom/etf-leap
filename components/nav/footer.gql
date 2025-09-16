@@ -1,0 +1,21 @@
+query GetFooter($locale: LanguageCodeFilterEnum!) {
+	menuItems(where: { location: FOOTER, parentDatabaseId: 0, language: $locale }, first: 50) {
+		nodes {
+			__typename
+			id
+			label
+			parentId
+			uri
+
+			childItems {
+				nodes {
+					__typename
+					id
+					label
+					uri
+					parentId
+				}
+			}
+		}
+	}
+}

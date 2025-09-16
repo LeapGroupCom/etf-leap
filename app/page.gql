@@ -1,0 +1,105 @@
+query GetPage($path: ID!, $locale: LanguageCodeEnum!) {
+	page(idType: URI, id: $path) {
+		translation(language: $locale) {
+			title
+			link
+			uri
+			content
+
+			seo {
+				breadcrumbs {
+					__typename
+					text
+					url
+				}
+				title
+				metaDesc
+				metaRobotsNofollow
+				metaRobotsNoindex
+				canonical
+			}
+
+			pageHome {
+				title
+				subTitle
+				sliderEtfs {
+					nodes {
+						__typename
+						... on Etf {
+							id
+							slug
+							title
+							uri
+							cptEtfs {
+								symbol
+							}
+						}
+					}
+				}
+				heroViewAllButtonLink {
+					nodes {
+						uri
+					}
+				}
+
+				whyInvestTitle
+				whyInvestSubtitle
+				whyInvestButtonLink {
+					url
+				}
+				whyInvestCards {
+					title
+					content
+				}
+
+				marketPerfTitle
+				marketPerfSubTitle
+				marketPerfMarketSymbol {
+					etf {
+						nodes {
+							__typename
+							... on Etf {
+								id
+								slug
+								title
+								cptEtfs {
+									symbol
+								}
+							}
+
+						}
+					}
+				}
+
+				brokerPicksTitle
+				brokerPicksSubTitle
+				brokerPicksBrokers {
+					title
+					content
+					buttonLink {
+						url
+					}
+				}
+
+				howToStartTitle
+				howToStartCards {
+					title
+					content
+				}
+			}
+		}
+	}
+}
+
+query GetAllPages {
+	pages {
+		nodes {
+			__typename
+			id
+			slug
+			title
+			uri
+			content
+		}
+	}
+}

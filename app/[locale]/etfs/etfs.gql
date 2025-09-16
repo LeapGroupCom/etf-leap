@@ -1,0 +1,76 @@
+query GetAllEtfs(
+	$locale: LanguageCodeFilterEnum!
+	$search: String = ""
+	$category: String = ""
+	$tag: String = ""
+	$pageSize: Int
+	$skip: Int
+) {
+	etfs(
+		where: {
+			language: $locale
+			searchString: $search
+			etfCategory: $category
+			etfTag: $tag
+			offsetPagination: { size: $pageSize, offset: $skip }
+		}
+	) {
+		pageInfo {
+			offsetPagination {
+				hasMore
+				total
+			}
+		}
+
+		nodes {
+			__typename
+			id
+			slug
+			title
+			uri
+
+			language {
+				code
+			}
+
+			cptEtfs {
+				symbol
+			}
+		}
+	}
+}
+
+query GetAllEtfsCategories {
+	etfCategories {
+		nodes {
+			__typename
+			id
+			slug
+			name
+		}
+	}
+}
+
+query GetAllEtfsTags {
+	etfTags {
+		nodes {
+			__typename
+			id
+			slug
+			name
+		}
+	}
+}
+
+query GetAllEtfsLocales {
+	etfs {
+		nodes {
+			__typename
+			id
+			slug
+			language {
+				code
+			}
+		}
+	}
+}

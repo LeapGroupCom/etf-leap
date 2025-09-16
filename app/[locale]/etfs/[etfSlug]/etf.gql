@@ -1,0 +1,30 @@
+query GetEtfBySlug($slug: ID!, $locale: LanguageCodeEnum!) {
+	etf(idType: SLUG, id: $slug) {
+		__typename
+		translation(language: $locale) {
+			id
+			slug
+			title
+			uri
+			date
+
+			cptEtfs {
+				symbol
+			}
+
+			cptEtfContent {
+				subtitle
+				content
+			}
+
+			seo {
+				title
+				metaDesc
+				breadcrumbs {
+					url
+					text
+				}
+			}
+		}
+	}
+}

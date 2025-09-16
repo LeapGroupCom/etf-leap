@@ -1,0 +1,206 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%; */
+
+
+
+
+    --background: 0 0% 100%;
+    --foreground: 0 0% 14.9020%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 14.9020%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 14.9020%;
+
+    --primary: 37.6923 92.1260% 50.1961%;
+    --primary-foreground: 0 0% 0%;
+
+    --secondary: 220.0000 14.2857% 95.8824%;
+    --secondary-foreground: 215 13.7931% 34.1176%;
+
+    --muted: 210 20.0000% 98.0392%;
+    --muted-foreground: 220 8.9362% 46.0784%;
+
+    --accent: 48.0000 100.0000% 96.0784%;
+    --accent-foreground: 22.7273 82.5000% 31.3725%;
+
+    --destructive: 0 84.2365% 60.1961%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 220 13.0435% 90.9804%;
+    --input: 220 13.0435% 90.9804%;
+    --ring: 37.6923 92.1260% 50.1961%;
+
+    --chart-1: hsl(37.6923 92.1260% 50.1961%);
+    --chart-2: hsl(32.1327 94.6188% 43.7255%);
+    --chart-3: hsl(25.9649 90.4762% 37.0588%);
+    --chart-4: hsl(22.7273 82.5000% 31.3725%);
+    --chart-5: hsl(21.7143 77.7778% 26.4706%);
+
+    --radius: 0.5rem;
+
+    --hero-gradient: linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 1));
+  }
+
+  .dark {
+    /* --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%; */
+
+
+
+    --background: 0 0% 9.0196%;
+    --foreground: 0 0% 89.8039%;
+
+    --card: 0 0% 14.9020%;
+    --card-foreground: 0 0% 89.8039%;
+
+    --popover: 0 0% 14.9020%;
+    --popover-foreground: 0 0% 89.8039%;
+
+    --primary: 37.6923 92.1260% 50.1961%;
+    --primary-foreground: 0 0% 0%;
+
+    --secondary: 0 0% 14.9020%;
+    --secondary-foreground: 0 0% 89.8039%;
+
+    --muted: 0 0% 14.9020%;
+    --muted-foreground: 0 0% 63.9216%;
+
+    --accent: 22.7273 82.5000% 31.3725%;
+    --accent-foreground: 48 96.6387% 76.6667%;
+
+    --destructive: 0 84.2365% 60.1961%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 0 0% 25.0980%;
+    --input: 0 0% 25.0980%;
+    --ring: 37.6923 92.1260% 50.1961%;
+
+    --chart-1: hsl(43.2558 96.4126% 56.2745%);
+    --chart-2: hsl(32.1327 94.6188% 43.7255%);
+    --chart-3: hsl(22.7273 82.5000% 31.3725%);
+    --chart-4: hsl(25.9649 90.4762% 37.0588%);
+    --chart-5: hsl(22.7273 82.5000% 31.3725%);
+
+
+
+
+
+
+    --hero-gradient: linear-gradient(rgba(23, 23, 23, 0.85), rgba(23, 23, 23, 1));
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+
+  h1 {
+    @apply text-3xl md:text-4xl font-bold tracking-tight;
+  }
+  h2 {
+    @apply text-3xl font-medium tracking-tight;
+  }
+  h3 {
+    @apply text-2xl font-medium tracking-tight;
+  }
+  h4 {
+    @apply text-xl font-medium tracking-tight;
+  }
+  h5 {
+    @apply text-lg font-medium tracking-tight;
+  }
+  h6 {
+    @apply text-base font-medium tracking-tight;
+  }
+}
+
+@layer components {
+  .hero-section {
+    @apply flex flex-col items-center justify-center relative bg-cover bg-center bg-[image:--hero-gradient] py-8 md:pt-24 md:pb-16;
+  }
+}
+
+@layer prose-m-none {
+  * {
+    @apply prose-headings:m-0;
+  }
+}
+
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+  }
+}

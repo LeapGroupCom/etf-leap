@@ -1,0 +1,12 @@
+{
+	"home_title": "Planifiez votre portefeuille mondial en toute confiance.",
+	"home_subtitle": "Nos puissants calculateurs et nos outils axés sur les données vous permettent de planifier votre stratégie d'investissement à long terme. Simulez, analysez et établissez une feuille de route pour votre avenir financier.",
+	"home_view_all_etfs_button_text": "Voir tous les calculateurs",
+	"etfs_title": "Calculateurs d'investissement dans les ETF",
+	"etfs_subtitle": "Explorez notre collection de puissants calculateurs d'investissement pour les ETF les plus courants. Projetez la croissance future, analysez les performances historiques et prenez des décisions éclairées pour votre portefeuille.",
+	"search_results_title": "{count, plural, =1 {# article trouvé} other {# articles trouvés}}",
+	"search_results_subtitle": "correspondant à votre recherche",
+	"404_title": "404 - Page non trouvée",
+	"404_subtitle": "Désolé, la page que vous cherchez n'existe pas.",
+	"404_button_text": "Retour à l'accueil"
+}

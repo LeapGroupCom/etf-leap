@@ -1,0 +1,12 @@
+{
+	"home_title": "Plan Your Global Portfolio with Confidence.",
+	"home_subtitle": "Our powerful calculators and data-driven tools give you the clarity to plan your long-term investment strategy. Simulate, analyze, and build a roadmap for your financial future.",
+	"home_view_all_etfs_button_text": "View all calculators",
+	"etfs_title": "ETF Investment Calculators",
+	"etfs_subtitle": "Explore our collection of powerful investment calculators for popular ETFs. Project future growth, analyze historical performance, and make informed decisions for your portfolio.",
+	"search_results_title": "{count, plural, =1 {# item } other {# items }} found",
+	"search_results_subtitle": "matching your search",
+	"404_title": "404 - Page Not Found",
+	"404_subtitle": "Sorry, the page you are looking for does not exist.",
+	"404_button_text": "Return Home"
+}
