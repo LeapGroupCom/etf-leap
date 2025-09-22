@@ -25,7 +25,7 @@ export function MobileNav({ items }: { items: MenuItem[] }) {
 				</Button>
 			</SheetTrigger>
 
-			<SheetContent side="left" className="pr-0 sm:rounded-tr-2xl sm:rounded-br-2xl backdrop-blur-xl bg-transparent" aria-describedby={undefined}>
+			<SheetContent side="left" className="pr-0 xs:rounded-tr-2xl xs:rounded-br-2xl backdrop-blur-xl bg-transparent" aria-describedby={undefined}>
 				<SheetHeader>
 					<SheetTitle className="text-left">ETFleap</SheetTitle>
 				</SheetHeader>
