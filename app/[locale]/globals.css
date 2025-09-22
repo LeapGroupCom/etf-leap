@@ -148,10 +148,15 @@
   }
 }
 
-@layer base {
-  /* * {
+
+@layer components {
+  .hero-section {
+    @apply flex flex-col items-center justify-center relative bg-cover bg-center bg-[image:--hero-gradient] py-8 md:pt-24 md:pb-16;
+  }
+
+  * {
     @apply border-border;
-  } */
+  }
 
   body {
     @apply bg-background text-foreground;
@@ -175,12 +180,6 @@
   }
   h6 {
     @apply text-base font-medium tracking-tight;
-  }
-}
-
-@layer components {
-  .hero-section {
-    @apply flex flex-col items-center justify-center relative bg-cover bg-center bg-[image:--hero-gradient] py-8 md:pt-24 md:pb-16;
   }
 }
 
