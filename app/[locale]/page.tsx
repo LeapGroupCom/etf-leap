@@ -82,7 +82,7 @@ export default async function Home({ params }: PageProps<'/[locale]'>) {
 		<>
 			<main>
 				{/* Hero Section */}
-				<section className="hero-section">
+				<section className="hero-section md:pt-24 md:pb-16">
 					<Image
 						priority
 						alt="Hero Image"
