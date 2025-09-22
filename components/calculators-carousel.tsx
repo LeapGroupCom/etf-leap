@@ -53,7 +53,7 @@ export const CalculatorItem = ({ etf }: CalculatorItemProps) => {
 		<div>
 			<Link
 				href={etf.uri}
-				className="block h-full rounded-2xl border border-border bg-card/70 p-5 transition-all duration-300 hover:border-primary hover:bg-card md:p-8"
+				className="block h-full rounded-2xl border bg-card/70 p-5 transition-all duration-300 hover:border-primary hover:bg-card md:p-8"
 			>
 				<span className="text-xl font-bold md:text-3xl">{etf.symbol}</span>
 				<p className="mt-2 truncate text-sm text-muted-foreground md:text-base">{etf.title}</p>

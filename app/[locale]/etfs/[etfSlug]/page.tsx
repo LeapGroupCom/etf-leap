@@ -153,7 +153,7 @@ export default async function Page({ params }: PageProps<'/[locale]/etfs/[etfSlu
 // 			<Button
 // 				size="lg"
 // 				asChild
-// 				className="mt-auto border-border bg-secondary font-bold text-white transition-all duration-300 hover:scale-[1.02] hover:bg-secondary"
+// 				className="mt-auto border bg-secondary font-bold text-white transition-all duration-300 hover:scale-[1.02] hover:bg-secondary"
 // 			>
 // 				<Link href={'#'}>Open an Account</Link>
 // 			</Button>

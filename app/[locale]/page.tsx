@@ -131,7 +131,7 @@ export default async function Home({ params }: PageProps<'/[locale]'>) {
 								{pageHome.whyInvestCards.map((card, index) => (
 									<Card
 										key={index}
-										className="select-none gap-4 border border-border p-5 transition-all duration-300 hover:border-primary"
+										className="select-none gap-4 border p-5 transition-all duration-300 hover:border-primary"
 									>
 										<div className="flex items-center justify-center">
 											<TrendingUp size={48} className="text-primary" />
@@ -201,7 +201,7 @@ export default async function Home({ params }: PageProps<'/[locale]'>) {
 											<Button
 												size="lg"
 												asChild
-												className="mt-auto w-full border-border bg-primary/30 font-bold text-primary hover:text-primary-foreground"
+												className="mt-auto w-full border bg-primary/30 font-bold text-primary hover:text-primary-foreground"
 											>
 												<Link href={broker.buttonLink.url}>Visit Site</Link>
 											</Button>
