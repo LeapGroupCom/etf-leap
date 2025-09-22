@@ -83,7 +83,7 @@ const styles = {
 			'font-sans antialiased',
 			// Headings (without spacing)
 			// text-3xl font-bold md:text-4xl
-			'[&_h1]:text-3xl [&_h1]:md:text-4xl [&_h1]:font-bold [&_h1]:tracking-tight',
+			'[&_h1]:text-3xl md:[&_h1]:text-4xl [&_h1]:font-bold [&_h1]:tracking-tight',
 			'[&_h2]:text-3xl [&_h2]:font-medium [&_h2]:tracking-tight',
 			'[&_h3]:text-2xl [&_h3]:font-medium [&_h3]:tracking-tight',
 			'[&_h4]:text-xl [&_h4]:font-medium [&_h4]:tracking-tight',
@@ -107,7 +107,7 @@ const styles = {
 		],
 		links: [
 			'[&_a]:underline [&_a]:underline-offset-4 [&_a]:decoration-primary/50 [&_a]:transition-colors',
-			'hover:[&_a]:decoration-primary hover:[&_a]:text-primary',
+			'[&_a]:hover:decoration-primary [&_a]:hover:text-primary',
 		],
 		lists: [
 			// Unordered lists
@@ -144,9 +144,9 @@ const styles = {
 		tables: [
 			'[&_table]:w-full [&_table]:my-4 [&_table]:overflow-x-auto [&_table]:rounded-lg [&_table]:border',
 			'[&_thead]:bg-muted/50',
-			'[&_tr]:border-b [&_tr]:last:border-0',
-			'[&_th]:border-r [&_th]:px-4 [&_th]:py-2 [&_th]:text-left [&_th]:font-semibold [&_th]:last:border-0',
-			'[&_td]:border-r [&_td]:px-4 [&_td]:py-2 [&_td]:last:border-0',
+			'[&_tr]:border-b last:[&_tr]:border-0',
+			'[&_th]:border-r [&_th]:px-4 [&_th]:py-2 [&_th]:text-left [&_th]:font-semibold last:[&_th]:border-0',
+			'[&_td]:border-r [&_td]:px-4 [&_td]:py-2 last:[&_td]:border-0',
 		],
 		media: [
 			'[&_img]:rounded-lg [&_img]:border [&_img]:my-4 [&_img]:max-w-full [&_img]:h-auto',
@@ -169,7 +169,7 @@ const styles = {
 			'[&_.footnotes]:mt-8 [&_.footnotes]:pt-4 [&_.footnotes]:border-t',
 			'[&_.footnotes_ol]:list-decimal [&_.footnotes_ol]:ml-6',
 			'[&_.footnote-ref]:text-xs [&_.footnote-ref]:align-super [&_.footnote-ref]:ml-0.5',
-			'[&_.footnote-backref]:no-underline hover:[&_.footnote-backref]:underline',
+			'[&_.footnote-backref]:no-underline [&_.footnote-backref]:hover:underline',
 		],
 	},
 	layout: {

@@ -17,7 +17,7 @@ export async function Footer() {
 
 	return (
 		<footer className="mt-auto border-t">
-			<Section className="!pb-4">
+			<Section className="pb-4!">
 				<Container className="grid gap-y-6 md:grid-cols-12">
 					<div className="not-prose col-span-6 flex flex-col gap-6">
 						<Link href="/">

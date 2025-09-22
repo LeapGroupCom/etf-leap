@@ -158,7 +158,7 @@ export function HistoricalGrowth() {
 												if (!value) return
 												field.onChange(value)
 											}}
-											className="h-10 w-full px-[1px]"
+											className="h-10 w-full px-px"
 											size="default"
 										>
 											<ToggleGroupItem value="yearly">Yearly</ToggleGroupItem>
@@ -186,7 +186,7 @@ export function HistoricalGrowth() {
 												if (!value) return
 												field.onChange(value === 'reinvest')
 											}}
-											className="h-10 w-full px-[1px]"
+											className="h-10 w-full px-px"
 											size="default"
 										>
 											<ToggleGroupItem value="reinvest">Reinvest</ToggleGroupItem>
@@ -202,7 +202,7 @@ export function HistoricalGrowth() {
 					<Button
 						size="default"
 						className="col-span-12 self-end font-bold sm:col-span-6 md:col-span-4"
-						variant={formState.isDirty ? 'default' : 'outline'}
+						variant={formState.isDirty ? 'default' : 'outline-solid'}
 						onClick={() => calculate()}
 					>
 						Calculate
@@ -239,17 +239,17 @@ export function HistoricalGrowth() {
 
 							<Box direction="col" gap={1} className="items-center">
 								<span className="text-center text-sm text-muted-foreground">Total Contributions</span>
-								<span className="text-2xl font-bold text-[var(--chart-1)]">{format(totals.contributions)}</span>
+								<span className="text-2xl font-bold text-(--chart-1)">{format(totals.contributions)}</span>
 							</Box>
 
 							<Box direction="col" gap={1} className="items-center">
 								<span className="text-center text-sm text-muted-foreground">Capital Gain</span>
-								<span className="text-2xl font-bold text-[var(--chart-2)]">{format(totals.gains)}</span>
+								<span className="text-2xl font-bold text-(--chart-2)">{format(totals.gains)}</span>
 							</Box>
 
 							<Box direction="col" gap={1} className="items-center">
 								<span className="text-center text-sm text-muted-foreground">Dividends Earned</span>
-								<span className="text-2xl font-bold text-[var(--chart-3)]">{format(totals.dividends)}</span>
+								<span className="text-2xl font-bold text-(--chart-3)">{format(totals.dividends)}</span>
 							</Box>
 						</Box>
 					</Box>

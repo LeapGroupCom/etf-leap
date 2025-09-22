@@ -289,7 +289,7 @@ export function FutureProjection() {
 						</Box>
 
 						<Button
-							variant={formState.isDirty ? 'default' : 'outline'}
+							variant={formState.isDirty ? 'default' : 'outline-solid'}
 							size="default"
 							className="w-full font-bold transition"
 							onClick={calculate}
@@ -325,17 +325,17 @@ export function FutureProjection() {
 
 							<Box direction="col" className="items-center gap-1">
 								<span className="text-center text-sm text-muted-foreground">Total Contributions</span>
-								<span className="text-2xl font-bold text-[var(--chart-1)]">{format(totals.contributions)}</span>
+								<span className="text-2xl font-bold text-(--chart-1)">{format(totals.contributions)}</span>
 							</Box>
 
 							<Box direction="col" className="items-center gap-1">
 								<span className="text-center text-sm text-muted-foreground">Capital Gain</span>
-								<span className="text-2xl font-bold text-[var(--chart-2)]">{format(totals.gains)}</span>
+								<span className="text-2xl font-bold text-(--chart-2)">{format(totals.gains)}</span>
 							</Box>
 
 							<Box direction="col" className="items-center gap-1">
 								<span className="text-center text-sm text-muted-foreground">Dividends Earned</span>
-								<span className="text-2xl font-bold text-[var(--chart-3)]">{format(totals.dividends)}</span>
+								<span className="text-2xl font-bold text-(--chart-3)">{format(totals.dividends)}</span>
 							</Box>
 						</Box>
 					</Box>
