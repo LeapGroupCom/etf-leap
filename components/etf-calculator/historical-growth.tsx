@@ -202,7 +202,7 @@ export function HistoricalGrowth() {
 					<Button
 						size="default"
 						className="col-span-12 self-end font-bold sm:col-span-6 md:col-span-4"
-						variant={formState.isDirty ? 'default' : 'outline-solid'}
+						variant={formState.isDirty ? 'default' : 'outline'}
 						onClick={() => calculate()}
 					>
 						Calculate
