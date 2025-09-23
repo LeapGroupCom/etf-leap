@@ -1,19 +1,6 @@
-import {
-	Pagination,
-	PaginationContent,
-	PaginationItem,
-	PaginationLink,
-	PaginationNext,
-	PaginationPrevious,
-} from '@/components/ui/pagination'
-
 import { Container, Prose, Section } from '@/components/craft'
-import { SearchInput } from '@/components/search-input'
 
 import { Breadcrumbs } from '@/components/breadcrumbs'
-import { FilterEtfs } from '@/components/etfs-filter'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import {
 	GetAllEtfsCategoriesDocument,
 	GetAllEtfsDocument,
@@ -21,14 +8,12 @@ import {
 	GetPageDocument,
 	LanguageCodeEnum,
 } from '@/graphql/generated/graphql'
-import { Link } from '@/i18n/navigation'
 import { fetchGraphQL } from '@/utils/fetchGraphQL'
-import { clamp } from '@/utils/math'
-import { createNumberList } from '@/utils/pagination'
+import { isNotNullish, isNullish } from '@/utils/types'
 import type { Metadata } from 'next'
 import { getLocale, getTranslations } from 'next-intl/server'
 import Balancer from 'react-wrap-balancer'
-import { isNotNullish, isNullish } from '@/utils/types'
+import { PageClientQuery } from './page-client'
 
 type Props = {
 	searchParams: Promise<{
@@ -41,7 +26,6 @@ type Props = {
 
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
 	const { tag, category, page: pageParam, search } = await searchParams
-	
 	const isIndex = isNullish(tag) && isNullish(category) && isNullish(search) && isNullish(pageParam)
 
 	const locale = await getLocale()
@@ -67,17 +51,15 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 		description: page.seo?.metaDesc,
 		robots: {
 			index: isIndex,
-			follow: true
-		}
+			follow: true,
+		},
 	}
 }
 
 export const dynamic = 'auto'
 export const revalidate = 600
-const PAGE_SIZE = 24
-const NB_MAX_PAGES = 5
-
-
+const PAGE_SIZE_ETFS = 24
+// const NB_MAX_PAGES = 5
 
 export default async function Page({ searchParams }: Props) {
 	const params = await searchParams
@@ -111,7 +93,7 @@ export default async function Page({ searchParams }: Props) {
 		...[category ? `etfs-category-${category}` : ''],
 	].filter(isNotNullish)
 
-	const [etfsData, categoriesData, tagsData] = await Promise.all([
+	const dataPromise = Promise.all([
 		fetchGraphQL(
 			GetAllEtfsDocument,
 			{
@@ -119,8 +101,8 @@ export default async function Page({ searchParams }: Props) {
 				search,
 				category,
 				tag,
-				pageSize: PAGE_SIZE,
-				skip: (pageNumber - 1) * PAGE_SIZE,
+				pageSize: PAGE_SIZE_ETFS,
+				skip: (pageNumber - 1) * PAGE_SIZE_ETFS,
 			},
 			{
 				tags: paginatedCacheTags,
@@ -142,38 +124,69 @@ export default async function Page({ searchParams }: Props) {
 		),
 	])
 
-	const etfs = etfsData?.etfs?.nodes
-	const totalPages = Math.ceil(
-		(etfsData.etfs?.pageInfo.offsetPagination?.total ?? etfs?.length ?? PAGE_SIZE) / PAGE_SIZE
-	)
+	// const [etfsData, categoriesData, tagsData] = await Promise.all([
+	// 	fetchGraphQL(
+	// 		GetAllEtfsDocument,
+	// 		{
+	// 			locale: locale.toUpperCase() as LanguageCodeEnum,
+	// 			search,
+	// 			category,
+	// 			tag,
+	// 			pageSize: PAGE_SIZE_ETFS,
+	// 			skip: (pageNumber - 1) * PAGE_SIZE_ETFS,
+	// 		},
+	// 		{
+	// 			tags: paginatedCacheTags,
+	// 		}
+	// 	),
+	// 	fetchGraphQL(
+	// 		GetAllEtfsCategoriesDocument,
+	// 		{},
+	// 		{
+	// 			tags: ['etfs-categories'],
+	// 		}
+	// 	),
+	// 	fetchGraphQL(
+	// 		GetAllEtfsTagsDocument,
+	// 		{},
+	// 		{
+	// 			tags: ['etfs-tags'],
+	// 		}
+	// 	),
+	// ])
 
-	const nbNumberDisplayed = Math.min(totalPages, NB_MAX_PAGES)
-	const nbMaxTranslations = Math.max(totalPages - NB_MAX_PAGES, 0)
-	const numbersTranslation = clamp(0, nbMaxTranslations, pageNumber - Math.ceil(NB_MAX_PAGES / 2))
-	const addGap = totalPages > 3 ? 4 : 0
+	// const etfs = etfsData?.etfs?.nodes
+	// const totalPages = Math.ceil(
+	// 	(etfsData.etfs?.pageInfo.offsetPagination?.total ?? etfs?.length ?? PAGE_SIZE_ETFS) / PAGE_SIZE_ETFS
+	// )
 
-	// Create pagination URL helper
-	const createPaginationUrl = (newPage: number) => {
-		const params = new URLSearchParams()
-		if (newPage > 1) params.set('page', newPage.toString())
-		if (category) params.set('category', category)
-		if (tag) params.set('tag', tag)
-		if (search) params.set('search', search)
-		return `/etfs${params.toString() ? `?${params.toString()}` : ''}`
-	}
+	// const nbNumberDisplayed = Math.min(totalPages, NB_MAX_PAGES)
+	// const nbMaxTranslations = Math.max(totalPages - NB_MAX_PAGES, 0)
+	// const numbersTranslation = clamp(0, nbMaxTranslations, pageNumber - Math.ceil(NB_MAX_PAGES / 2))
+	// const addGap = totalPages > 3 ? 4 : 0
 
-	const categories =
-		categoriesData?.etfCategories?.nodes.map(category => ({
-			id: category.id,
-			name: category.name ?? '',
-			slug: category.slug ?? '',
-		})) ?? []
-	const tags =
-		tagsData?.etfTags?.nodes.map(tag => ({
-			id: tag.id,
-			name: tag.name ?? '',
-			slug: tag.slug ?? '',
-		})) ?? []
+	// // Create pagination URL helper
+	// const createPaginationUrl = (newPage: number) => {
+	// 	const params = new URLSearchParams()
+	// 	if (newPage > 1) params.set('page', newPage.toString())
+	// 	if (category) params.set('category', category)
+	// 	if (tag) params.set('tag', tag)
+	// 	if (search) params.set('search', search)
+	// 	return `/etfs${params.toString() ? `?${params.toString()}` : ''}`
+	// }
+
+	// const categories =
+	// 	categoriesData?.etfCategories?.nodes.map(category => ({
+	// 		id: category.id,
+	// 		name: category.name ?? '',
+	// 		slug: category.slug ?? '',
+	// 	})) ?? []
+	// const tags =
+	// 	tagsData?.etfTags?.nodes.map(tag => ({
+	// 		id: tag.id,
+	// 		name: tag.name ?? '',
+	// 		slug: tag.slug ?? '',
+	// 	})) ?? []
 
 	return (
 		<>
@@ -191,8 +204,8 @@ export default async function Page({ searchParams }: Props) {
 							</p>
 						</Prose>
 
-						<div className="space-y-4">
-							<p className="text-sm text-muted-foreground">
+						{/* <div className="space-y-4">
+							<p className="text-muted-foreground text-sm">
 								{t('search_results_title', { count: 10 })}
 								{search && ` ${t('search_results_subtitle')}`}
 							</p>
@@ -200,21 +213,43 @@ export default async function Page({ searchParams }: Props) {
 							<SearchInput defaultValue={search} />
 
 							<FilterEtfs tags={tags} categories={categories} selectedTag={tag} selectedCategory={category} />
-						</div>
+						</div> */}
 
-						{etfs && etfs.length > 0 ? (
+						{/* <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+							{Array(PAGE_SIZE_ETFS).fill(null).map((_, index) => (
+								<Card key={index} className="p-0 bg-transparent h-[180px]">
+									<Skeleton className="h-full w-full bg-card" />
+								</Card>
+							))}
+						</div> */}
+
+						{/* <Suspense fallback={
+							<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+								{Array(PAGE_SIZE_ETFS).fill(null).map((_, index) => (
+									<Card key={index} className="p-0 bg-transparent h-[180px]">
+										<Skeleton className="h-full w-full bg-card" />
+									</Card>
+								))}
+							</div>
+						}>
+							<PageClient promise={testPromise} />
+						</Suspense> */}
+
+						<PageClientQuery promise={dataPromise} />
+
+						{/* {etfs && etfs.length > 0 ? (
 							<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
 								{etfs.map(({ id, uri, title, cptEtfs }) => (
 									<Card key={id} className="p-4">
 										<div className="flex flex-col gap-1">
 											<h2 className="text-xl font-bold">{cptEtfs?.symbol}</h2>
-											<p className="text-sm text-muted-foreground">{title}</p>
+											<p className="text-muted-foreground text-sm">{title}</p>
 										</div>
 
 										<Button
 											size="lg"
 											asChild
-											className="mt-auto w-full border bg-primary/30 font-bold text-primary hover:text-primary-foreground"
+											className="bg-primary/30 text-primary hover:text-primary-foreground mt-auto w-full border font-bold"
 										>
 											<Link href={uri ?? ''} locale={locale}>
 												Go to Calculator
@@ -224,12 +259,12 @@ export default async function Page({ searchParams }: Props) {
 								))}
 							</div>
 						) : (
-							<div className="flex h-24 w-full items-center justify-center rounded-lg border bg-accent/25">
+							<div className="bg-accent/25 flex h-24 w-full items-center justify-center rounded-lg border">
 								<p>No posts found</p>
 							</div>
-						)}
+						)} */}
 
-						{totalPages > 1 && (
+						{/* {totalPages > 1 && (
 							<Pagination>
 								<PaginationContent>
 									<PaginationItem>
@@ -279,7 +314,7 @@ export default async function Page({ searchParams }: Props) {
 									</PaginationItem>
 								</PaginationContent>
 							</Pagination>
-						)}
+						)} */}
 					</div>
 				</Container>
 			</Section>
