@@ -9,7 +9,6 @@ import Logo from '@/public/logo.svg'
 import { fetchGraphQL } from '@/utils/fetchGraphQL'
 import { getLocale } from 'next-intl/server'
 import Image from 'next/image'
-import { Skeleton } from '../ui/skeleton'
 
 type Props = {
 	className?: string
@@ -24,7 +23,7 @@ export async function Header({ className, id }: Props) {
 	const menuItems = data?.menuItems?.nodes
 
 	return (
-		<nav className={cn('sticky top-0 z-50 bg-background', 'border-b', className)} id={id}>
+		<nav className={cn('bg-background sticky top-0 z-50', 'border-b', className)} id={id}>
 			<div id="nav-container" className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4 sm:px-8">
 				<Link className="flex items-center gap-4 transition hover:opacity-75" href="/" locale={locale}>
 					<Image src={Logo} alt="Logo" loading="eager" className="dark:invert" width={42} height={26.44}></Image>
@@ -46,8 +45,6 @@ export async function Header({ className, id }: Props) {
 					<ThemeToggle />
 
 					<LocaleSwitcher />
-
-					<Skeleton className="w-10 h-10" />
 
 					{!!menuItems?.length && <MobileNav items={menuItems as MenuItem[]} />}
 				</div>

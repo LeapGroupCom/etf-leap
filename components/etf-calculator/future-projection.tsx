@@ -289,7 +289,7 @@ export function FutureProjection() {
 						</Box>
 
 						<Button
-							variant={formState.isDirty ? 'default' : 'outline-solid'}
+							variant={formState.isDirty ? 'default' : 'outline'}
 							size="default"
 							className="w-full font-bold transition"
 							onClick={calculate}

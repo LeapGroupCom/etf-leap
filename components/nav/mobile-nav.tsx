@@ -25,18 +25,23 @@ export function MobileNav({ items }: { items: MenuItem[] }) {
 				</Button>
 			</SheetTrigger>
 
-			<SheetContent side="left" className="pr-0 xs:rounded-tr-2xl xs:rounded-br-2xl backdrop-blur-xl bg-transparent" aria-describedby={undefined}>
-				<SheetHeader>
+			<SheetContent
+				side="left"
+				className="xs:rounded-tr-2xl xs:rounded-br-2xl bg-transparent pr-0 backdrop-blur-xl"
+				aria-describedby={undefined}
+			>
+				<SheetHeader className="py-4">
 					<SheetTitle className="text-left">ETFleap</SheetTitle>
 				</SheetHeader>
 
-				<ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-10">
+				<Separator />
+				<ScrollArea className="my-4 h-[calc(100vh-8rem)] py-5 pr-6">
 					<div className="flex flex-col space-y-3">
-						<Separator />
 						{items?.map(({ label, uri }) => (
 							<Link
 								key={uri}
 								href={uri!}
+								className="py-3 transition-all border-b border-b-transparent hover:border-b-border"
 								onClick={() => {
 									setOpen(false)
 								}}
