@@ -3,15 +3,22 @@
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
-import { Menu } from 'lucide-react'
-import * as React from 'react'
-
 import { MenuItem } from '@/graphql/generated/graphql'
+import { useIsMobile } from '@/hooks/use-mobile'
 import { Link } from '@/i18n/navigation'
+import { Menu } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { Separator } from '../ui/separator'
 
 export function MobileNav({ items }: { items: MenuItem[] }) {
-	const [open, setOpen] = React.useState(false)
+	const [open, setOpen] = useState(false)
+	const isMobile = useIsMobile()
+
+	useEffect(() => {
+		if (!isMobile && open) {
+			setOpen(false)
+		}
+	}, [isMobile])
 
 	return (
 		<Sheet open={open} onOpenChange={setOpen}>
@@ -41,7 +48,7 @@ export function MobileNav({ items }: { items: MenuItem[] }) {
 							<Link
 								key={uri}
 								href={uri!}
-								className="py-3 transition-all border-b border-b-transparent hover:border-b-border"
+								className="hover:border-b-primary border-b-border border-b  py-3 transition-all"
 								onClick={() => {
 									setOpen(false)
 								}}
