@@ -1,6 +1,7 @@
 import { Breadcrumbs } from '@/components/breadcrumbs'
 import { Container, Prose, Section } from '@/components/craft'
 import { EtfCalculator } from '@/components/etf-calculator'
+import { EtfCalculatorClientSkeleton } from '@/components/etf-calculator/etf-calculator-client'
 import { GetAllEtfsLocalesDocument, GetEtfBySlugDocument, LanguageCodeEnum } from '@/graphql/generated/graphql'
 import { cn } from '@/lib/utils'
 import { serverEnv } from '@/serverEnv'
@@ -116,7 +117,7 @@ export default async function Page({ params }: PageProps<'/[locale]/etfs/[etfSlu
 					)}
 
 					<section className="mt-12">
-						<Suspense fallback={<div>Loading...</div>}>
+						<Suspense fallback={<EtfCalculatorClientSkeleton />}>
 							<EtfCalculator ticker={ticker} />
 						</Suspense>
 					</section>

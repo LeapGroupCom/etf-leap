@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   Select,
   SelectContent,
@@ -37,6 +38,7 @@ export function FilterEtfs({
   selectedCategory,
 }: FilterEtfsProps) {
   const router = useRouter();
+  const t = useTranslations();
 
   const handleFilterChange = (type: string, value: string) => {
     const newParams = new URLSearchParams(window.location.search);
@@ -65,10 +67,10 @@ export function FilterEtfs({
         onValueChange={(value) => handleFilterChange("tag", value)}
       >
         <SelectTrigger disabled={!hasTags}>
-          {hasTags ? <SelectValue placeholder="All Tags" /> : "No tags found"}
+          {hasTags ? <SelectValue placeholder={t("all_tags")} /> : t("all_tags")}
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">All Tags</SelectItem>
+          <SelectItem value="all">{t("all_tags")}</SelectItem>
           {tags.map((tag) => (
             <SelectItem key={tag.id} value={tag.slug}>
               {tag.name}
@@ -83,13 +85,13 @@ export function FilterEtfs({
       >
         <SelectTrigger disabled={!hasCategories}>
           {hasCategories ? (
-            <SelectValue placeholder="All Categories" />
+            <SelectValue placeholder={t("all_categories")} />
           ) : (
-            "No categories found"
+            t("all_categories")
           )}
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">All Categories</SelectItem>
+          <SelectItem value="all">{t("all_categories")}</SelectItem>
           {categories.map((category) => (
             <SelectItem key={category.id} value={category.slug}>
               {category.name}
@@ -99,7 +101,7 @@ export function FilterEtfs({
       </Select>
 
       <Button variant="outline" onClick={handleResetFilters}>
-        Reset Filters
+        {t("reset_filters")}
       </Button>
     </div>
   );

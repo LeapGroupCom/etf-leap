@@ -1,6 +1,5 @@
-import { Container, Prose, Section } from '@/components/craft'
-
 import { Breadcrumbs } from '@/components/breadcrumbs'
+import { Container, Prose, Section } from '@/components/craft'
 import {
 	GetAllEtfsCategoriesDocument,
 	GetAllEtfsDocument,
@@ -13,7 +12,8 @@ import { isNotNullish, isNullish } from '@/utils/types'
 import type { Metadata } from 'next'
 import { getLocale, getTranslations } from 'next-intl/server'
 import Balancer from 'react-wrap-balancer'
-import { PageClientQuery } from './page-client'
+import { PageClient } from './page-client'
+import { parseToPlainText } from '@/utils/parser'
 
 type Props = {
 	searchParams: Promise<{
@@ -59,7 +59,6 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 export const dynamic = 'auto'
 export const revalidate = 600
 const PAGE_SIZE_ETFS = 24
-// const NB_MAX_PAGES = 5
 
 export default async function Page({ searchParams }: Props) {
 	const params = await searchParams
@@ -86,6 +85,8 @@ export default async function Page({ searchParams }: Props) {
 		url: breadcrumb?.url ?? '',
 	}))
 
+	const pageTitle = pageData?.page?.translation?.title ?? t('etfs_title')
+
 	const paginatedCacheTags = [
 		'etfs',
 		...[search ? `etfs-search-${search}` : ''],
@@ -93,21 +94,22 @@ export default async function Page({ searchParams }: Props) {
 		...[category ? `etfs-category-${category}` : ''],
 	].filter(isNotNullish)
 
-	const dataPromise = Promise.all([
-		fetchGraphQL(
-			GetAllEtfsDocument,
-			{
-				locale: locale.toUpperCase() as LanguageCodeEnum,
-				search,
-				category,
-				tag,
-				pageSize: PAGE_SIZE_ETFS,
-				skip: (pageNumber - 1) * PAGE_SIZE_ETFS,
-			},
-			{
-				tags: paginatedCacheTags,
-			}
-		),
+	const dataPromise = fetchGraphQL(
+		GetAllEtfsDocument,
+		{
+			locale: locale.toUpperCase() as LanguageCodeEnum,
+			search,
+			category,
+			tag,
+			pageSize: PAGE_SIZE_ETFS,
+			skip: (pageNumber - 1) * PAGE_SIZE_ETFS,
+		},
+		{
+			tags: paginatedCacheTags,
+		}
+	)
+
+	const filtersPromise = Promise.all([
 		fetchGraphQL(
 			GetAllEtfsCategoriesDocument,
 			{},
@@ -124,70 +126,6 @@ export default async function Page({ searchParams }: Props) {
 		),
 	])
 
-	// const [etfsData, categoriesData, tagsData] = await Promise.all([
-	// 	fetchGraphQL(
-	// 		GetAllEtfsDocument,
-	// 		{
-	// 			locale: locale.toUpperCase() as LanguageCodeEnum,
-	// 			search,
-	// 			category,
-	// 			tag,
-	// 			pageSize: PAGE_SIZE_ETFS,
-	// 			skip: (pageNumber - 1) * PAGE_SIZE_ETFS,
-	// 		},
-	// 		{
-	// 			tags: paginatedCacheTags,
-	// 		}
-	// 	),
-	// 	fetchGraphQL(
-	// 		GetAllEtfsCategoriesDocument,
-	// 		{},
-	// 		{
-	// 			tags: ['etfs-categories'],
-	// 		}
-	// 	),
-	// 	fetchGraphQL(
-	// 		GetAllEtfsTagsDocument,
-	// 		{},
-	// 		{
-	// 			tags: ['etfs-tags'],
-	// 		}
-	// 	),
-	// ])
-
-	// const etfs = etfsData?.etfs?.nodes
-	// const totalPages = Math.ceil(
-	// 	(etfsData.etfs?.pageInfo.offsetPagination?.total ?? etfs?.length ?? PAGE_SIZE_ETFS) / PAGE_SIZE_ETFS
-	// )
-
-	// const nbNumberDisplayed = Math.min(totalPages, NB_MAX_PAGES)
-	// const nbMaxTranslations = Math.max(totalPages - NB_MAX_PAGES, 0)
-	// const numbersTranslation = clamp(0, nbMaxTranslations, pageNumber - Math.ceil(NB_MAX_PAGES / 2))
-	// const addGap = totalPages > 3 ? 4 : 0
-
-	// // Create pagination URL helper
-	// const createPaginationUrl = (newPage: number) => {
-	// 	const params = new URLSearchParams()
-	// 	if (newPage > 1) params.set('page', newPage.toString())
-	// 	if (category) params.set('category', category)
-	// 	if (tag) params.set('tag', tag)
-	// 	if (search) params.set('search', search)
-	// 	return `/etfs${params.toString() ? `?${params.toString()}` : ''}`
-	// }
-
-	// const categories =
-	// 	categoriesData?.etfCategories?.nodes.map(category => ({
-	// 		id: category.id,
-	// 		name: category.name ?? '',
-	// 		slug: category.slug ?? '',
-	// 	})) ?? []
-	// const tags =
-	// 	tagsData?.etfTags?.nodes.map(tag => ({
-	// 		id: tag.id,
-	// 		name: tag.name ?? '',
-	// 		slug: tag.slug ?? '',
-	// 	})) ?? []
-
 	return (
 		<>
 			{breadcrumbsItems.length > 0 && <Breadcrumbs items={breadcrumbsItems} />}
@@ -197,124 +135,14 @@ export default async function Page({ searchParams }: Props) {
 					<div className="space-y-8">
 						<Prose>
 							<h1 className="text-center">
-								<Balancer>{t('etfs_title')}</Balancer>
+								<Balancer>{pageTitle}</Balancer>
 							</h1>
 							<p className="text-center">
 								<Balancer>{t('etfs_subtitle')}</Balancer>
 							</p>
 						</Prose>
 
-						{/* <div className="space-y-4">
-							<p className="text-muted-foreground text-sm">
-								{t('search_results_title', { count: 10 })}
-								{search && ` ${t('search_results_subtitle')}`}
-							</p>
-
-							<SearchInput defaultValue={search} />
-
-							<FilterEtfs tags={tags} categories={categories} selectedTag={tag} selectedCategory={category} />
-						</div> */}
-
-						{/* <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-							{Array(PAGE_SIZE_ETFS).fill(null).map((_, index) => (
-								<Card key={index} className="p-0 bg-transparent h-[180px]">
-									<Skeleton className="h-full w-full bg-card" />
-								</Card>
-							))}
-						</div> */}
-
-						{/* <Suspense fallback={
-							<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-								{Array(PAGE_SIZE_ETFS).fill(null).map((_, index) => (
-									<Card key={index} className="p-0 bg-transparent h-[180px]">
-										<Skeleton className="h-full w-full bg-card" />
-									</Card>
-								))}
-							</div>
-						}>
-							<PageClient promise={testPromise} />
-						</Suspense> */}
-
-						<PageClientQuery promise={dataPromise} />
-
-						{/* {etfs && etfs.length > 0 ? (
-							<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-								{etfs.map(({ id, uri, title, cptEtfs }) => (
-									<Card key={id} className="p-4">
-										<div className="flex flex-col gap-1">
-											<h2 className="text-xl font-bold">{cptEtfs?.symbol}</h2>
-											<p className="text-muted-foreground text-sm">{title}</p>
-										</div>
-
-										<Button
-											size="lg"
-											asChild
-											className="bg-primary/30 text-primary hover:text-primary-foreground mt-auto w-full border font-bold"
-										>
-											<Link href={uri ?? ''} locale={locale}>
-												Go to Calculator
-											</Link>
-										</Button>
-									</Card>
-								))}
-							</div>
-						) : (
-							<div className="bg-accent/25 flex h-24 w-full items-center justify-center rounded-lg border">
-								<p>No posts found</p>
-							</div>
-						)} */}
-
-						{/* {totalPages > 1 && (
-							<Pagination>
-								<PaginationContent>
-									<PaginationItem>
-										<PaginationPrevious
-											className={pageNumber <= 1 ? 'pointer-events-none opacity-50' : ''}
-											href={createPaginationUrl(pageNumber - 1)}
-										/>
-									</PaginationItem>
-
-									<PaginationItem>
-										<PaginationLink href={createPaginationUrl(1)} isActive={1 === pageNumber}>
-											{1}
-										</PaginationLink>
-									</PaginationItem>
-
-									<div
-										className="relative mx-2 flex overflow-hidden"
-										style={{ width: (nbNumberDisplayed - 2) * 40 + addGap * 2, height: 40 }}
-									>
-										<div
-											className="absolute flex gap-1 transition-transform"
-											style={{
-												transform: `translateX(-${numbersTranslation * (40 + addGap)}px)`,
-											}}
-										>
-											{createNumberList(2, totalPages - 1).map(pageNum => (
-												<PaginationItem key={pageNum}>
-													<PaginationLink href={createPaginationUrl(pageNum)} isActive={pageNum === pageNumber}>
-														{pageNum}
-													</PaginationLink>
-												</PaginationItem>
-											))}
-										</div>
-									</div>
-
-									<PaginationItem>
-										<PaginationLink href={createPaginationUrl(totalPages)} isActive={totalPages === pageNumber}>
-											{totalPages}
-										</PaginationLink>
-									</PaginationItem>
-
-									<PaginationItem>
-										<PaginationNext
-											className={pageNumber >= totalPages ? 'pointer-events-none opacity-50' : ''}
-											href={createPaginationUrl(pageNumber + 1)}
-										/>
-									</PaginationItem>
-								</PaginationContent>
-							</Pagination>
-						)} */}
+						<PageClient dataPromise={dataPromise} filtersPromise={filtersPromise} />
 					</div>
 				</Container>
 			</Section>

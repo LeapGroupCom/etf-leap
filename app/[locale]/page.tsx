@@ -108,7 +108,7 @@ export default async function Home({ params }: PageProps<'/[locale]'>) {
 
 					{isNotNullish(pageHome?.heroViewAllButtonLink?.nodes?.[0]?.uri) && (
 						<Button size="lg" className="font-bold">
-							<Link href={pageHome.heroViewAllButtonLink.nodes[0].uri}>{t('home_view_all_etfs_button_text')}</Link>
+							<Link prefetch={false} href={pageHome.heroViewAllButtonLink.nodes[0].uri}>{t('home_view_all_etfs_button_text')}</Link>
 						</Button>
 					)}
 				</section>

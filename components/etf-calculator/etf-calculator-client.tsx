@@ -5,6 +5,7 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, useState } from 'react'
 import { match } from 'ts-pattern'
+import { Skeleton } from '../ui/skeleton'
 import { FutureProjection } from './future-projection'
 import { HistoricalGrowth } from './historical-growth'
 
@@ -96,3 +97,9 @@ export function EtfCalculatorClient() {
 		</>
 	)
 }
+
+export const EtfCalculatorClientSkeleton = () => (
+	<Card className="h-[1664px] sm:h-[1692px] md:h-[1334px] lg:h-[1372px] overflow-hidden border-none bg-transparent p-0">
+		<Skeleton className="bg-card h-full w-full" />
+	</Card>
+)

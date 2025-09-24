@@ -1,3 +1,5 @@
+'use client'
+
 import { EtfFutureCalChart } from '@/components/charts/etf-calculator-chart'
 import { Box } from '@/components/craft'
 import { Button } from '@/components/ui/button'
@@ -289,7 +291,7 @@ export function FutureProjection() {
 						</Box>
 
 						<Button
-							variant={formState.isDirty ? 'default' : 'outline'}
+							variant={'default'}
 							size="default"
 							className="w-full font-bold transition"
 							onClick={calculate}

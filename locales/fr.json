@@ -8,5 +8,11 @@
 	"search_results_subtitle": "correspondant à votre recherche",
 	"404_title": "404 - Page non trouvée",
 	"404_subtitle": "Désolé, la page que vous cherchez n'existe pas.",
-	"404_button_text": "Retour à l'accueil"
+	"404_button_text": "Retour à l'accueil",
+	"no_posts_found": "Aucun article trouvé",
+	"go_to_calculator_button_text": "Aller au calculateur",
+	"all_tags": "Tous les tags",
+	"all_categories": "Toutes les catégories",
+	"reset_filters": "Réinitialiser les filtres",
+	"search_placeholder": "Recherche..."
 }
