@@ -63,7 +63,7 @@ query GetAllEtfsTags {
 }
 
 query GetAllEtfsLocales {
-	etfs {
+	etfs(first: 300) {
 		nodes {
 			__typename
 			id

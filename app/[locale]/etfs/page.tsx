@@ -13,7 +13,6 @@ import type { Metadata } from 'next'
 import { getLocale, getTranslations } from 'next-intl/server'
 import Balancer from 'react-wrap-balancer'
 import { PageClient } from './page-client'
-import { parseToPlainText } from '@/utils/parser'
 
 type Props = {
 	searchParams: Promise<{
