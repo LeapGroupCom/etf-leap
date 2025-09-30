@@ -5,6 +5,7 @@ query GetPage($path: ID!, $locale: LanguageCodeEnum!) {
 			link
 			uri
 			content
+			isFrontPage
 
 			seo {
 				breadcrumbs {
@@ -100,6 +101,10 @@ query GetAllPages {
 			title
 			uri
 			content
+			isFrontPage
+			language {
+				slug
+			}
 		}
 	}
 }

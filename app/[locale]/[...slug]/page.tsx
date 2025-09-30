@@ -43,21 +43,17 @@ export async function generateMetadata({ params }: PageProps<'/[locale]/[...slug
 	const page = data?.page?.translation
 
 	const ogUrl = new URL(`${serverEnv.NEXT_PUBLIC_SITE_URL}/api/og`)
-	ogUrl.searchParams.append('title', page.title ?? '')
-	// Strip HTML tags for description and limit length
-	const description =
-		page.content
-			?.replace(/<[^>]*>/g, '')
-			.trim()
-			.slice(0, 200) + '...'
-	ogUrl.searchParams.append('description', description)
+	ogUrl.searchParams.append('title', page.seo?.title ?? '')
+	// Strip HTML tags for description
+	const description = page.seo?.metaDesc?.replace(/<[^>]*>/g, '').trim()
+	ogUrl.searchParams.append('description', description ?? '')
 
 	return {
-		title: page.title ?? '',
-		description: description,
+		title: page.seo?.title ?? '',
+		description: page.seo?.metaDesc ?? '',
 		openGraph: {
-			title: page.title ?? '',
-			description: description,
+			title: page.seo?.title ?? '',
+			description: page.seo?.metaDesc ?? '',
 			type: 'article',
 			url: `${serverEnv.NEXT_PUBLIC_SITE_URL}${page.uri}`,
 			images: [
@@ -71,8 +67,8 @@ export async function generateMetadata({ params }: PageProps<'/[locale]/[...slug
 		},
 		twitter: {
 			card: 'summary_large_image',
-			title: page.title ?? '',
-			description: description,
+			title: page.seo?.title ?? '',
+			description: page.seo?.metaDesc ?? '',
 			images: [ogUrl.toString()],
 		},
 	}
@@ -87,7 +83,7 @@ export default async function Page({ params }: PageProps<'/[locale]/[...slug]'>)
 		locale: locale.toUpperCase() as LanguageCodeEnum,
 	})
 
-	if (!data || !data?.page?.translation) {
+	if (!data || !data?.page?.translation || data.page.translation.isFrontPage) {
 		return notFound()
 	}
 
@@ -98,7 +94,7 @@ export default async function Page({ params }: PageProps<'/[locale]/[...slug]'>)
 			<Container>
 				<Prose>
 					<h2>{page.title}</h2>
-					<div dangerouslySetInnerHTML={{ __html: page.content ?? '' }} />
+					<div dangerouslySetInnerHTML={{ __html: page.title ?? '' }} />
 				</Prose>
 			</Container>
 		</Section>
