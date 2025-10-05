@@ -75,3 +75,19 @@ query GetAllEtfsLocales {
 		}
 	}
 }
+
+query GetAllEtfsForSitemap($pageSize: Int, $offset: Int) {
+	etfs(where: { offsetPagination: { size: $pageSize, offset: $offset } }) {
+		nodes {
+			__typename
+			id
+			slug
+			uri
+			date
+			language {
+				code
+				slug
+			}
+		}
+	}
+}

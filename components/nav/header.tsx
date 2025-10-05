@@ -25,7 +25,7 @@ export async function Header({ className, id }: Props) {
 	return (
 		<nav className={cn('bg-background sticky top-0 z-50', 'border-b', className)} id={id}>
 			<div id="nav-container" className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4 sm:px-8">
-				<Link className="flex items-center gap-4 transition hover:opacity-75" href="/" locale={locale}>
+				<Link className="flex items-center gap-4 transition hover:opacity-75" href="/">
 					<Image src={Logo} alt="Logo" loading="eager" className="dark:invert" width={42} height={26.44}></Image>
 
 					<span className="text-sm">ETFleap</span>
@@ -35,7 +35,7 @@ export async function Header({ className, id }: Props) {
 					<div className="mx-2 hidden md:flex">
 						{menuItems?.map(({ label, uri }) => (
 							<Button key={uri} asChild variant="ghost" size="sm">
-								<Link key={uri} href={uri!} locale={locale}>
+								<Link key={uri} href={uri!}>
 									{label}
 								</Link>
 							</Button>

@@ -144,7 +144,7 @@ export function PageClient({
 									asChild
 									className="bg-primary/30 text-primary hover:text-primary-foreground mt-auto w-full border font-bold"
 								>
-								<Link prefetch={false} href={uri ?? ''} locale={locale}>
+								<Link prefetch={false} href={uri ?? ''}>
 									{t('go_to_calculator_button_text')}
 								</Link>
 								</Button>

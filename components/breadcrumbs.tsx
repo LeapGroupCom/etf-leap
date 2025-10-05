@@ -1,6 +1,5 @@
 import { Link } from '@/i18n/navigation'
 import { SlashIcon } from 'lucide-react'
-import { getLocale } from 'next-intl/server'
 import { Fragment } from 'react'
 import { Container } from './craft'
 import { BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from './ui/breadcrumb'
@@ -13,9 +12,8 @@ type Props = {
 }
 
 export async function Breadcrumbs({ items }: Props) {
-	const locale = await getLocale()
 	return (
-		<div className="sticky top-[73px] z-50 border-b bg-background py-1">
+		<div className="bg-background sticky top-[73px] z-50 border-b py-1">
 			<Container>
 				<BreadcrumbList>
 					{items.map((item, index) => {
@@ -29,9 +27,7 @@ export async function Breadcrumbs({ items }: Props) {
 									<>
 										<BreadcrumbItem>
 											<BreadcrumbLink asChild>
-												<Link href={item.url} locale={locale}>
-													{item.text}
-												</Link>
+												<Link href={item.url}>{item.text}</Link>
 											</BreadcrumbLink>
 										</BreadcrumbItem>
 										<BreadcrumbSeparator>

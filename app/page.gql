@@ -108,3 +108,20 @@ query GetAllPages {
 		}
 	}
 }
+
+query GetAllPagesForSitemap {
+	pages {
+		nodes {
+			__typename
+			id
+			slug
+			uri
+			isFrontPage
+			date
+			language {
+				code
+				slug
+			}
+		}
+	}
+}
