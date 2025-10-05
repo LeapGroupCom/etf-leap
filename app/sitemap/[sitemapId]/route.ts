@@ -14,10 +14,10 @@ import { match } from 'ts-pattern'
 
 export const revalidate = 86400 // 24 hours
 
-export async function GET(request: Request, { params }: { params: Promise<{ sitemapId: SitemapTypeXml }> }) {
+export async function GET(request: Request, { params }: { params: Promise<{ sitemapId: string }> }) {
 	const { sitemapId } = await params
 
-	const entries = await match(sitemapId)
+	const entries = await match(sitemapId as SitemapTypeXml)
 		.with('pages-sitemap.xml', async () => generatePagesSitemap())
 		.with('etfs-sitemap.xml', async () => generateEtfsSitemap())
 		.exhaustive()
