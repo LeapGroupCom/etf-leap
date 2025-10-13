@@ -7,10 +7,12 @@ import { MenuItem } from '@/graphql/generated/graphql'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { Link } from '@/i18n/navigation'
 import { Menu } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import { Separator } from '../ui/separator'
 
 export function MobileNav({ items }: { items: MenuItem[] }) {
+	const t = useTranslations()
 	const [open, setOpen] = useState(false)
 	const isMobile = useIsMobile()
 
@@ -28,7 +30,7 @@ export function MobileNav({ items }: { items: MenuItem[] }) {
 					className="w-10 border px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
 				>
 					<Menu />
-					<span className="sr-only">Toggle Menu</span>
+					<span className="sr-only">{t('toggle_menu')}</span>
 				</Button>
 			</SheetTrigger>
 

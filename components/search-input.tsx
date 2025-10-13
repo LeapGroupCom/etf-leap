@@ -29,6 +29,7 @@ export function SearchInput({ defaultValue }: { defaultValue?: string }) {
       placeholder={t("search_placeholder")}
       defaultValue={defaultValue}
       onChange={(e) => handleSearch(e.target.value)}
+      className="shadow-sm shadow-primary-foreground/30"
     />
   );
 }

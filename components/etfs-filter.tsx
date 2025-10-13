@@ -66,7 +66,7 @@ export function FilterEtfs({
         value={selectedTag || "all"}
         onValueChange={(value) => handleFilterChange("tag", value)}
       >
-        <SelectTrigger disabled={!hasTags}>
+        <SelectTrigger disabled={!hasTags} className="shadow-sm shadow-primary-foreground/30">
           {hasTags ? <SelectValue placeholder={t("all_tags")} /> : t("all_tags")}
         </SelectTrigger>
         <SelectContent>
@@ -83,7 +83,7 @@ export function FilterEtfs({
         value={selectedCategory || "all"}
         onValueChange={(value) => handleFilterChange("category", value)}
       >
-        <SelectTrigger disabled={!hasCategories}>
+        <SelectTrigger disabled={!hasCategories} className="shadow-sm shadow-primary-foreground/30">
           {hasCategories ? (
             <SelectValue placeholder={t("all_categories")} />
           ) : (
@@ -100,7 +100,7 @@ export function FilterEtfs({
         </SelectContent>
       </Select>
 
-      <Button variant="outline" onClick={handleResetFilters}>
+      <Button variant="outline" onClick={handleResetFilters} className="shadow-sm shadow-primary-foreground/30">
         {t("reset_filters")}
       </Button>
     </div>

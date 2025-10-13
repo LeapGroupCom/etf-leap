@@ -8,7 +8,7 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { useEtfHistoricalGrowthCalculations } from '@/hooks/useEtfCalculations'
 import { HistoricalGrowthInputs, historicalGrowthInputsSchema, HistoricalGrowthResult } from '@/utils/etf-calculator'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useFormatter } from 'next-intl'
+import { useFormatter, useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { NumericFormat } from 'react-number-format'
@@ -28,6 +28,7 @@ const CURRENCY_MAP = {
 }
 
 export function HistoricalGrowth() {
+	const t = useTranslations()
 	const [currency] = useState<keyof typeof CURRENCY_MAP>('usd')
 	const [totals, setTotals] = useState<HistoricalGrowthResult['totals']>({
 		balance: 0,
@@ -84,7 +85,7 @@ export function HistoricalGrowth() {
 						name="initialInvestment"
 						render={({ field }) => (
 							<FormItem className="col-span-12 sm:col-span-6 md:col-span-4">
-								<FormLabel>Initial Investment</FormLabel>
+								<FormLabel>{t('calculator_initial_investment')}</FormLabel>
 								<FormControl>
 									<NumericFormat
 										getInputRef={field.ref}
@@ -117,7 +118,7 @@ export function HistoricalGrowth() {
 						name="investmentAmount"
 						render={({ field }) => (
 							<FormItem className="col-span-12 w-full sm:col-span-6 md:col-span-4">
-								<FormLabel>Investment Amount</FormLabel>
+								<FormLabel>{t('calculator_investment_amount')}</FormLabel>
 								<FormControl>
 									<NumericFormat
 										getInputRef={field.ref}
@@ -148,7 +149,7 @@ export function HistoricalGrowth() {
 						name="investmentFrequency"
 						render={({ field }) => (
 							<FormItem className="col-span-12 w-full sm:col-span-6 md:col-span-4">
-								<FormLabel>Contribution Frequency</FormLabel>
+								<FormLabel>{t('calculator_contribution_frequency')}</FormLabel>
 								<FormControl>
 									<Box direction="row" gap={2}>
 										<ToggleGroup
@@ -161,8 +162,8 @@ export function HistoricalGrowth() {
 											className="h-10 w-full px-px"
 											size="default"
 										>
-											<ToggleGroupItem value="yearly">Yearly</ToggleGroupItem>
-											<ToggleGroupItem value="monthly">Monthly</ToggleGroupItem>
+											<ToggleGroupItem value="yearly">{t('calculator_yearly')}</ToggleGroupItem>
+											<ToggleGroupItem value="monthly">{t('calculator_monthly')}</ToggleGroupItem>
 										</ToggleGroup>
 									</Box>
 								</FormControl>
@@ -176,7 +177,7 @@ export function HistoricalGrowth() {
 						name="reinvestDividends"
 						render={({ field }) => (
 							<FormItem className="col-span-12 w-full sm:col-span-6 md:col-span-4">
-								<FormLabel>Dividend Policy</FormLabel>
+								<FormLabel>{t('calculator_dividend_policy')}</FormLabel>
 								<FormControl>
 									<Box direction="row" gap={2}>
 										<ToggleGroup
@@ -189,8 +190,8 @@ export function HistoricalGrowth() {
 											className="h-10 w-full px-px"
 											size="default"
 										>
-											<ToggleGroupItem value="reinvest">Reinvest</ToggleGroupItem>
-											<ToggleGroupItem value="no-reinvest">No Reinvest</ToggleGroupItem>
+											<ToggleGroupItem value="reinvest">{t('calculator_reinvest')}</ToggleGroupItem>
+											<ToggleGroupItem value="no-reinvest">{t('calculator_no_reinvest')}</ToggleGroupItem>
 										</ToggleGroup>
 									</Box>
 								</FormControl>
@@ -205,50 +206,46 @@ export function HistoricalGrowth() {
 						variant={'default'}
 						onClick={() => calculate()}
 					>
-						Calculate
+						{t('calculator_calculate')}
 					</Button>
 
 					<Separator orientation="horizontal" className="col-span-12" />
 
 					<Box className="col-span-12 block">
 						<Box direction="col" gap={4} className="grow">
-							<span className="inline-block text-lg font-bold">Growth Breakdown</span>
+							<span className="inline-block text-lg font-bold">{t('calculator_growth_breakdown')}</span>
 
 							<BreakdownTableHistorical currency={CURRENCY_MAP[currency].code} />
 						</Box>
 					</Box>
 
-					<Box direction={{ base: 'col', md: 'row' }} gap={6} className="col-span-12 items-center md:mt-6">
-						<Box className="order-2 w-full grow md:order-1">
+					<Box cols={12} gap={6} className="col-span-12 items-center md:mt-6">
+						<Box direction="col" gap={4} className="order-2 col-span-12 w-full lg:order-1 lg:col-span-10">
 							<EtfHistoricalCalChart className="grow sm:min-h-[250px]" currency={CURRENCY_MAP[currency].code} />
 						</Box>
 
 						<Box
-							direction={{
-								base: 'row',
-								md: 'col',
-							}}
-							wrap="wrap"
+							direction="row"
 							gap={4}
-							className="order-1 my-4 w-full items-center justify-center md:order-2 md:my-0 md:w-auto"
+							className="order-1 col-span-12 my-4 w-full flex-row flex-wrap items-center justify-center lg:order-2 lg:col-span-2 lg:my-0 lg:w-auto lg:flex-col"
 						>
-							<Box direction="col" gap={1} className="items-center">
-								<span className="text-center text-sm text-muted-foreground">End Value</span>
+							<Box direction="col" className="items-center gap-1">
+								<span className="text-muted-foreground text-center text-sm">{t('calculator_end_value')}</span>
 								<span className="text-2xl font-bold">{format(totals.balance)}</span>
 							</Box>
 
-							<Box direction="col" gap={1} className="items-center">
-								<span className="text-center text-sm text-muted-foreground">Total Contributions</span>
+							<Box direction="col" className="items-center gap-1">
+								<span className="text-muted-foreground text-center text-sm">{t('calculator_total_contributions')}</span>
 								<span className="text-2xl font-bold text-(--chart-1)">{format(totals.contributions)}</span>
 							</Box>
 
-							<Box direction="col" gap={1} className="items-center">
-								<span className="text-center text-sm text-muted-foreground">Capital Gain</span>
+							<Box direction="col" className="items-center gap-1">
+								<span className="text-muted-foreground text-center text-sm">{t('calculator_capital_gain')}</span>
 								<span className="text-2xl font-bold text-(--chart-2)">{format(totals.gains)}</span>
 							</Box>
 
-							<Box direction="col" gap={1} className="items-center">
-								<span className="text-center text-sm text-muted-foreground">Dividends Earned</span>
+							<Box direction="col" className="items-center gap-1">
+								<span className="text-muted-foreground text-center text-sm">{t('calculator_dividends_earned')}</span>
 								<span className="text-2xl font-bold text-(--chart-3)">{format(totals.dividends)}</span>
 							</Box>
 						</Box>

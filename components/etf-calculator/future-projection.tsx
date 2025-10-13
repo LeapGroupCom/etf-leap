@@ -15,7 +15,7 @@ import {
 	FutureProjectionResult,
 } from '@/utils/etf-calculator'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useFormatter } from 'next-intl'
+import { useFormatter, useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { NumericFormat } from 'react-number-format'
@@ -34,6 +34,7 @@ const CURRENCY_MAP = {
 }
 
 export function FutureProjection() {
+	const t = useTranslations()
 	const [currency] = useState<keyof typeof CURRENCY_MAP>('usd')
 	const [totals, setTotals] = useState<FutureProjectionResult['totals']>({
 		balance: 0,
@@ -95,7 +96,7 @@ export function FutureProjection() {
 							name="initialInvestment"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Initial Investment</FormLabel>
+									<FormLabel>{t('calculator_initial_investment')}</FormLabel>
 									<FormControl>
 										<NumericFormat
 											getInputRef={field.ref}
@@ -127,7 +128,7 @@ export function FutureProjection() {
 								name="monthlyContribution"
 								render={({ field }) => (
 									<FormItem className="w-full">
-										<FormLabel>Monthly Contribution</FormLabel>
+										<FormLabel>{t('calculator_monthly_contribution')}</FormLabel>
 										<FormControl>
 											<NumericFormat
 												getInputRef={field.ref}
@@ -158,7 +159,7 @@ export function FutureProjection() {
 								name="frequency"
 								render={({ field }) => (
 									<FormItem className="w-full">
-										<FormLabel>Frequency</FormLabel>
+										<FormLabel>{t('calculator_frequency')}</FormLabel>
 										<FormControl>
 											<ToggleGroup
 												type="single"
@@ -172,10 +173,10 @@ export function FutureProjection() {
 												className="w-full"
 											>
 												<ToggleGroupItem value="yearly" size="sm">
-													Yearly
+													{t('calculator_yearly')}
 												</ToggleGroupItem>
 												<ToggleGroupItem value="monthly" size="sm">
-													Monthly
+													{t('calculator_monthly')}
 												</ToggleGroupItem>
 											</ToggleGroup>
 										</FormControl>
@@ -190,7 +191,7 @@ export function FutureProjection() {
 							name="timeHorizon"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Time Horizon (Years)</FormLabel>
+									<FormLabel>{t('calculator_time_horizon')}</FormLabel>
 									<FormControl>
 										<NumericFormat
 											getInputRef={field.ref}
@@ -206,7 +207,7 @@ export function FutureProjection() {
 
 												const isValid = floatValue === undefined || (!!floatValue && floatValue <= 50)
 												if (!isValid) {
-													setError('timeHorizon', { message: 'Time horizon must be between 1 and 50 years' })
+													setError('timeHorizon', { message: t('calculator_time_horizon_error') })
 												}
 
 												return isValid
@@ -229,7 +230,7 @@ export function FutureProjection() {
 							name="estTotalReturn"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Est. Total Annual Return (%)</FormLabel>
+									<FormLabel>{t('calculator_est_total_return')}</FormLabel>
 									<FormControl>
 										<NumericFormat
 											getInputRef={field.ref}
@@ -259,7 +260,7 @@ export function FutureProjection() {
 							name="estDividendYield"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Est. Dividend Yield (%)</FormLabel>
+									<FormLabel>{t('calculator_est_dividend_yield')}</FormLabel>
 									<FormControl>
 										<NumericFormat
 											getInputRef={field.ref}
@@ -286,7 +287,7 @@ export function FutureProjection() {
 
 						<Box className="col-span-12 justify-center">
 							<span className="text-sm text-muted-foreground">
-								{ticker} Expense Ratio is <span className="font-bold">{expenseRatio}%</span>
+								{ticker} {t('calculator_expense_ratio')} <span className="font-bold">{expenseRatio}%</span>
 							</span>
 						</Box>
 
@@ -296,7 +297,7 @@ export function FutureProjection() {
 							className="w-full font-bold transition"
 							onClick={calculate}
 						>
-							Calculate
+							{t('calculator_calculate')}
 						</Button>
 					</Box>
 
@@ -304,7 +305,7 @@ export function FutureProjection() {
 
 					<Box direction="col" gap={6} className="col-span-12 md:col-span-7">
 						<Box direction="col" gap={4} className="h-full">
-							<span className="text-lg font-bold">Breakdown</span>
+							<span className="text-lg font-bold">{t('calculator_breakdown')}</span>
 
 							<BreakdownTableFuture currency={CURRENCY_MAP[currency].code} />
 						</Box>
@@ -321,22 +322,22 @@ export function FutureProjection() {
 							className="order-1 col-span-12 my-4 w-full flex-row flex-wrap items-center justify-center lg:order-2 lg:col-span-2 lg:my-0 lg:w-auto lg:flex-col"
 						>
 							<Box direction="col" className="items-center gap-1">
-								<span className="text-center text-sm text-muted-foreground">End Value</span>
+								<span className="text-center text-sm text-muted-foreground">{t('calculator_end_value')}</span>
 								<span className="text-2xl font-bold">{format(totals.balance)}</span>
 							</Box>
 
 							<Box direction="col" className="items-center gap-1">
-								<span className="text-center text-sm text-muted-foreground">Total Contributions</span>
+								<span className="text-center text-sm text-muted-foreground">{t('calculator_total_contributions')}</span>
 								<span className="text-2xl font-bold text-(--chart-1)">{format(totals.contributions)}</span>
 							</Box>
 
 							<Box direction="col" className="items-center gap-1">
-								<span className="text-center text-sm text-muted-foreground">Capital Gain</span>
+								<span className="text-center text-sm text-muted-foreground">{t('calculator_capital_gain')}</span>
 								<span className="text-2xl font-bold text-(--chart-2)">{format(totals.gains)}</span>
 							</Box>
 
 							<Box direction="col" className="items-center gap-1">
-								<span className="text-center text-sm text-muted-foreground">Dividends Earned</span>
+								<span className="text-center text-sm text-muted-foreground">{t('calculator_dividends_earned')}</span>
 								<span className="text-2xl font-bold text-(--chart-3)">{format(totals.dividends)}</span>
 							</Box>
 						</Box>

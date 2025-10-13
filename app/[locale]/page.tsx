@@ -85,7 +85,7 @@ export default async function Home({ params }: PageProps<'/[locale]'>) {
 				<section className="hero-section md:pt-24 md:pb-16 py-8">
 					<Image
 						priority
-						alt="Hero Image"
+						alt={t('hero_image')}
 						src={HeroImage}
 						fill
 						className="absolute inset-0 z-[-1] h-full w-full object-cover"
@@ -107,7 +107,7 @@ export default async function Home({ params }: PageProps<'/[locale]'>) {
 					</Container>
 
 					{isNotNullish(pageHome?.heroViewAllButtonLink?.nodes?.[0]?.uri) && (
-						<Button size="lg" className="font-bold">
+						<Button size="lg" className="font-bold" asChild>
 							<Link prefetch={false} href={pageHome.heroViewAllButtonLink.nodes[0].uri}>{t('home_view_all_etfs_button_text')}</Link>
 						</Button>
 					)}
@@ -152,8 +152,8 @@ export default async function Home({ params }: PageProps<'/[locale]'>) {
 						)}
 
 						{isNotNullish(pageHome.whyInvestButtonLink) && isNotNullish(pageHome.whyInvestButtonLink.url) && (
-							<Button size="lg" className="mx-auto mt-8 font-bold">
-								<Link href={pageHome.whyInvestButtonLink.url}>Build Your Strategy</Link>
+							<Button size="lg" className="mx-auto mt-8 font-bold" asChild>
+								<Link href={pageHome.whyInvestButtonLink.url}>{t('build_your_strategy')}</Link>
 							</Button>
 						)}
 					</Container>
@@ -201,9 +201,9 @@ export default async function Home({ params }: PageProps<'/[locale]'>) {
 											<Button
 												size="lg"
 												asChild
-												className="mt-auto w-full border bg-primary/30 font-bold text-primary hover:text-primary-foreground"
+												className="mt-auto w-full bg-primary/30 font-bold text-accent-foreground hover:text-primary-foreground"
 											>
-												<Link href={broker.buttonLink.url}>Visit Site</Link>
+												<Link href={broker.buttonLink.url}>{t('visit_site')}</Link>
 											</Button>
 										)}
 									</Card>

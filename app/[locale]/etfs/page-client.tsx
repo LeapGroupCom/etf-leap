@@ -31,10 +31,7 @@ type Props = {
 	filtersPromise: Promise<[GetAllEtfsCategoriesQuery, GetAllEtfsTagsQuery]>
 }
 
-export function PageClient({
-	dataPromise,
-	filtersPromise,
-}: Props) {
+export function PageClient({ dataPromise, filtersPromise }: Props) {
 	const locale = useLocale()
 	const searchParams = useSearchParams()
 	const t = useTranslations()
@@ -49,14 +46,14 @@ export function PageClient({
 		queryKey: ['etfs', search, category, tag, pageNumber, locale],
 		queryFn: () => dataPromise,
 		placeholderData: keepPreviousData,
-		staleTime: STALE_TIME
+		staleTime: STALE_TIME,
 	})
 
 	const { data: filtersData } = useQuery({
 		queryKey: ['etfs-filters'],
 		queryFn: () => filtersPromise,
 		placeholderData: keepPreviousData,
-		staleTime: STALE_TIME
+		staleTime: STALE_TIME,
 	})
 
 	const [categoriesData, tagsData] = filtersData || []
@@ -142,11 +139,12 @@ export function PageClient({
 								<Button
 									size="lg"
 									asChild
-									className="bg-primary/30 text-primary hover:text-primary-foreground mt-auto w-full border font-bold"
+									// className="bg-primary/30 text-primary hover:text-primary-foreground mt-auto w-full border font-bold"
+									className="bg-primary/30 text-accent-foreground hover:text-primary-foreground mt-auto w-full border font-bold"
 								>
-								<Link prefetch={false} href={uri ?? ''}>
-									{t('go_to_calculator_button_text')}
-								</Link>
+									<Link prefetch={false} href={uri ?? ''}>
+										{t('go_to_calculator_button_text')}
+									</Link>
 								</Button>
 							</Card>
 						))}

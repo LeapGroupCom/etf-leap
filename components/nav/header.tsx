@@ -7,7 +7,7 @@ import { Link } from '@/i18n/navigation'
 import { cn } from '@/lib/utils'
 import Logo from '@/public/logo.svg'
 import { fetchGraphQL } from '@/utils/fetchGraphQL'
-import { getLocale } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 import Image from 'next/image'
 
 type Props = {
@@ -17,6 +17,7 @@ type Props = {
 
 export async function Header({ className, id }: Props) {
 	const locale = await getLocale()
+	const t = await getTranslations()
 	const data = await fetchGraphQL(GetHeaderDocument, {
 		locale: locale.toUpperCase() as LanguageCodeFilterEnum,
 	})
@@ -26,15 +27,15 @@ export async function Header({ className, id }: Props) {
 		<nav className={cn('bg-background sticky top-0 z-50', 'border-b', className)} id={id}>
 			<div id="nav-container" className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4 sm:px-8">
 				<Link className="flex items-center gap-4 transition hover:opacity-75" href="/">
-					<Image src={Logo} alt="Logo" loading="eager" className="dark:invert" width={42} height={26.44}></Image>
+					<Image src={Logo} alt={t('logo_alt')} loading="eager" className="dark:invert" width={42} height={26.44}></Image>
 
 					<span className="text-sm">ETFleap</span>
 				</Link>
 
-				<div className="flex items-center gap-2 md:gap-4">
-					<div className="mx-2 hidden md:flex">
+				<div className="flex items-center gap-2 md:gap-6">
+					<div className="mx-2 hidden md:flex gap-4">
 						{menuItems?.map(({ label, uri }) => (
-							<Button key={uri} asChild variant="ghost" size="sm">
+							<Button key={uri} asChild variant="outline" size="sm">
 								<Link key={uri} href={uri!}>
 									{label}
 								</Link>
@@ -44,7 +45,9 @@ export async function Header({ className, id }: Props) {
 
 					<ThemeToggle />
 
-					<LocaleSwitcher />
+
+					{/* hide locale switcher for now */}
+					{/* <LocaleSwitcher /> */}
 
 					{!!menuItems?.length && <MobileNav items={menuItems as MenuItem[]} />}
 				</div>

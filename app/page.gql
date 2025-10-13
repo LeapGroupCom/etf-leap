@@ -109,8 +109,8 @@ query GetAllPages {
 	}
 }
 
-query GetAllPagesForSitemap {
-	pages {
+query GetAllPagesForSitemap($locales: [LanguageCodeEnum!]!) {
+	pages(where: { languages: $locales }) {
 		nodes {
 			__typename
 			id

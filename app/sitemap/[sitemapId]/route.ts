@@ -3,6 +3,7 @@ import {
 	GetAllEtfsForSitemapQuery,
 	GetAllPagesForSitemapDocument,
 	GetAllPagesForSitemapQuery,
+	LanguageCodeEnum,
 } from '@/graphql/generated/graphql'
 import { routing } from '@/i18n/routing'
 import { serverEnv } from '@/serverEnv'
@@ -18,8 +19,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ site
 	const { sitemapId } = await params
 
 	const entries = await match(sitemapId as SitemapTypeXml)
-		.with('pages-sitemap.xml', async () => generatePagesSitemap())
-		.with('etfs-sitemap.xml', async () => generateEtfsSitemap())
+		.with('pages-sitemap.xml', async () => generatePagesSitemap(['en']))
+		.with('etfs-sitemap.xml', async () => generateEtfsSitemap(['en']))
 		.exhaustive()
 
 	const xml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -34,10 +35,16 @@ export async function GET(request: Request, { params }: { params: Promise<{ site
 	})
 }
 
-const generatePagesSitemap = async () => {
-	const pagesData = await fetchGraphQL(GetAllPagesForSitemapDocument, undefined, {
-		tags: ['pages-sitemap'],
-	})
+const generatePagesSitemap = async (locales: typeof routing.locales) => {
+	const pagesData = await fetchGraphQL(
+		GetAllPagesForSitemapDocument,
+		{
+			locales: locales.map(locale => locale.toUpperCase() as LanguageCodeEnum),
+		},
+		{
+			tags: ['pages-sitemap'],
+		}
+	)
 
 	const pages = pagesData?.pages?.nodes ?? []
 	const pagesEntries: MetadataRoute.Sitemap = parseEntries(pages)
@@ -45,8 +52,8 @@ const generatePagesSitemap = async () => {
 	return generateXmlMarkup(pagesEntries)
 }
 
-const generateEtfsSitemap = async () => {
-	const etfs = await getEtfsRecords()
+const generateEtfsSitemap = async (locales: typeof routing.locales) => {
+	const etfs = await getEtfsRecords(locales.map(locale => locale.toUpperCase() as LanguageCodeEnum))
 	const etfEntries: MetadataRoute.Sitemap = parseEntries(etfs)
 
 	return generateXmlMarkup(etfEntries)
@@ -64,7 +71,7 @@ const parseEntries = (entries: ParseEntriesProps) => {
 
 		const localePrefix = match(locale)
 			.with('en', () => '')
-			.with('fr', () => '/fr')
+			// .with('fr', () => '/fr')
 			.exhaustive()
 
 		return match(i)
@@ -94,7 +101,7 @@ const generateXmlMarkup = (entries: MetadataRoute.Sitemap) => {
 	)
 }
 
-async function getEtfsRecords(): Promise<NonNullable<GetAllEtfsForSitemapQuery['etfs']>['nodes']> {
+async function getEtfsRecords(locales: LanguageCodeEnum[]): Promise<NonNullable<GetAllEtfsForSitemapQuery['etfs']>['nodes']> {
 	const PAGE_SIZE = 100
 
 	const loadRecords = async (allRecords: any[], page: number): Promise<any[]> => {
@@ -103,6 +110,7 @@ async function getEtfsRecords(): Promise<NonNullable<GetAllEtfsForSitemapQuery['
 			{
 				pageSize: PAGE_SIZE,
 				offset: (page - 1) * PAGE_SIZE,
+				locales,
 			},
 			{
 				tags: ['etfs-sitemap'],

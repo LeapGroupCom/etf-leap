@@ -3,6 +3,7 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { AnimatePresence, motion } from 'motion/react'
+import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import { match } from 'ts-pattern'
 import { Skeleton } from '../ui/skeleton'
@@ -36,6 +37,7 @@ const paneVariants = ({
 })
 
 export function EtfCalculatorClient() {
+	const t = useTranslations()
 	const [isClient, setIsClient] = useState(false)
 	const [mode, setMode] = useState<'future-projection' | 'historical-growth'>('future-projection')
 
@@ -57,10 +59,10 @@ export function EtfCalculatorClient() {
 						className="w-full"
 					>
 						<ToggleGroupItem value="future-projection" size="lg">
-							Future Projection
+							{t('calculator_future_projection')}
 						</ToggleGroupItem>
 						<ToggleGroupItem value="historical-growth" size="lg">
-							Historical Growth
+							{t('calculator_historical_growth')}
 						</ToggleGroupItem>
 					</ToggleGroup>
 

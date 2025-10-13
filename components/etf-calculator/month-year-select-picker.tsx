@@ -2,7 +2,7 @@
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { HistoricalGrowthInputs } from '@/utils/etf-calculator'
-import { DateTimeFormatOptions, useFormatter } from 'next-intl'
+import { DateTimeFormatOptions, useFormatter, useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { Box } from '../craft'
@@ -17,6 +17,7 @@ export function MonthYearSelectPicker({
 	maxYear?: number
 	className?: string
 }) {
+	const t = useTranslations()
 	const { control } = useFormContext<HistoricalGrowthInputs>()
 
 	const formatter = useFormatter()
@@ -43,7 +44,7 @@ export function MonthYearSelectPicker({
 				name="startDate"
 				render={({ field }) => (
 					<FormItem className={className}>
-						<FormLabel>Start Date</FormLabel>
+						<FormLabel>{t('start_date')}</FormLabel>
 						<FormControl>
 							<Box direction="row" gap={2}>
 								{/* Year Selector */}
@@ -53,8 +54,8 @@ export function MonthYearSelectPicker({
 										field.onChange(new Date(parseInt(v), field.value.getMonth(), field.value.getDate()))
 									}}
 								>
-									<SelectTrigger className="flex-1">
-										<SelectValue placeholder="Year" />
+									<SelectTrigger className="flex-1 shadow">
+										<SelectValue placeholder={t('year_placeholder')} />
 									</SelectTrigger>
 
 									<SelectContent>{yearOptions}</SelectContent>
@@ -67,8 +68,8 @@ export function MonthYearSelectPicker({
 										field.onChange(new Date(field.value.getFullYear(), Number(v), field.value.getDate()))
 									}
 								>
-									<SelectTrigger className="flex-1">
-										<SelectValue placeholder="Month" />
+									<SelectTrigger className="flex-1 shadow">
+										<SelectValue placeholder={t('month_placeholder')} />
 									</SelectTrigger>
 									<SelectContent>
 										{Array.from({ length: 12 }).map((_, m) => (

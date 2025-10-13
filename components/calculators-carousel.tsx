@@ -22,11 +22,11 @@ export function CalculatorsCarousel({ etfs }: Props) {
 				align: 'start',
 			}}
 			plugins={[
-				AutoPlay({
-					delay: 3000,
-					stopOnMouseEnter: true,
-					stopOnInteraction: false,
-				}),
+				// AutoPlay({
+				// 	delay: 3000,
+				// 	stopOnMouseEnter: true,
+				// 	stopOnInteraction: false,
+				// }),
 			]}
 			className="pb-12"
 		>
@@ -50,10 +50,10 @@ type CalculatorItemProps = {
 
 export const CalculatorItem = ({ etf }: CalculatorItemProps) => {
 	return (
-		<div>
+		<div className='p-0.5'>
 			<Link
 				href={etf.uri}
-				className="block h-full rounded-2xl border bg-card/70 p-5 transition-all duration-300 hover:border-primary hover:bg-card md:p-8"
+				className="block h-full rounded-2xl border bg-card/70 p-5 transition-all duration-300 hover:border-primary hover:bg-card md:p-8 shadow-sm shadow-primary-foreground/30"
 			>
 				<span className="text-xl font-bold md:text-3xl">{etf.symbol}</span>
 				<p className="mt-2 truncate text-sm text-muted-foreground md:text-base">{etf.title}</p>
