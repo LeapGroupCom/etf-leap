@@ -22,11 +22,11 @@ export function CalculatorsCarousel({ etfs }: Props) {
 				align: 'start',
 			}}
 			plugins={[
-				// AutoPlay({
-				// 	delay: 3000,
-				// 	stopOnMouseEnter: true,
-				// 	stopOnInteraction: false,
-				// }),
+				AutoPlay({
+					delay: 3000,
+					stopOnMouseEnter: true,
+					stopOnInteraction: false,
+				}),
 			]}
 			className="pb-12"
 		>
