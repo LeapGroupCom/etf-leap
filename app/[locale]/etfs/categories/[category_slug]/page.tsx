@@ -2,44 +2,54 @@ import { Breadcrumbs } from '@/components/breadcrumbs'
 import { Container, Prose, Section } from '@/components/craft'
 import { EtfsPaginatedList } from '@/components/etfs-paginated-list'
 import { EtfsSearch } from '@/components/etfs-search'
-import { GetAllEtfsDocument, GetPageDocument, LanguageCodeEnum } from '@/graphql/generated/graphql'
+import { GetAllEtfsDocument, GetEtfCategoryDocument, LanguageCodeEnum } from '@/graphql/generated/graphql'
 import { fetchGraphQL } from '@/utils/fetchGraphQL'
 import { isNullish } from '@/utils/types'
-import type { Metadata } from 'next'
-import { getLocale, getTranslations } from 'next-intl/server'
+import { Metadata } from 'next'
+import { getLocale } from 'next-intl/server'
+import { notFound } from 'next/navigation'
 import Balancer from 'react-wrap-balancer'
 
 type Props = {
+	params: Promise<{
+		category_slug: string
+	}>
+
 	searchParams: Promise<{
 		page?: string
 	}>
 }
 
-export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+export const dynamic = 'auto'
+export const revalidate = 600
+const PAGE_SIZE_ETFS = 24
+
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
+	const { category_slug } = await params
 	const { page: pageParam } = await searchParams
 	const isIndex = isNullish(pageParam)
 
 	const locale = await getLocale()
 	const pageData = await fetchGraphQL(
-		GetPageDocument,
+		GetEtfCategoryDocument,
 		{
 			locale: locale.toUpperCase() as LanguageCodeEnum,
-			path: '/etfs',
+			slug: category_slug,
 		},
 		{
-			tags: ['etfs-page'],
+			tags: [`etf-category-${category_slug}`],
 		}
 	)
 
-	const page = pageData?.page?.translation
+	const category = pageData?.etfCategory?.translation
 
-	if (!page) {
+	if (!category) {
 		return {}
 	}
 
 	return {
-		title: page.seo?.title,
-		description: page.seo?.metaDesc,
+		title: category.seo?.title,
+		description: category.seo?.metaDesc,
 		robots: {
 			index: isIndex,
 			follow: true,
@@ -47,42 +57,33 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 	}
 }
 
-export const dynamic = 'auto'
-export const revalidate = 600
-const PAGE_SIZE_ETFS = 40
-
-export default async function Page({ searchParams }: Props) {
-	const params = await searchParams
-	const { page: pageParam } = params
-	const pageNumber = pageParam ? parseInt(pageParam, 10) : 1
-
+export default async function Page({ params, searchParams }: PageProps<'/[locale]/etfs/categories/[category_slug]'>) {
 	const locale = await getLocale()
-	const t = await getTranslations()
+	const { category_slug } = await params
+	const { page: pageParam, search } = await searchParams
+	const pageNumber = pageParam ? parseInt(pageParam as string, 10) : 1
 
 	const pageData = await fetchGraphQL(
-		GetPageDocument,
+		GetEtfCategoryDocument,
 		{
 			locale: locale.toUpperCase() as LanguageCodeEnum,
-			path: '/etfs',
+			slug: category_slug,
 		},
 		{
-			tags: ['etfs-page'],
+			tags: [`etf-category-${category_slug}`],
 		}
 	)
 
-	const breadcrumbs = pageData?.page?.translation?.seo?.breadcrumbs ?? []
-	const breadcrumbsItems = breadcrumbs.map(breadcrumb => ({
-		text: breadcrumb?.text ?? '',
-		url: breadcrumb?.url ?? '',
-	}))
+	if (!pageData?.etfCategory?.translation) {
+		return notFound()
+	}
 
-	const pageTitle = pageData?.page?.translation?.title ?? t('etfs_title')
-
-	const promiseQueryKeys = ['etfs']
+	const promiseQueryKeys = [`category-etfs-${category_slug}`]
 	const dataPromise = fetchGraphQL(
 		GetAllEtfsDocument,
 		{
 			locale: locale.toUpperCase() as LanguageCodeEnum,
+			category: category_slug,
 			pageSize: PAGE_SIZE_ETFS,
 			skip: (pageNumber - 1) * PAGE_SIZE_ETFS,
 		},
@@ -90,6 +91,13 @@ export default async function Page({ searchParams }: Props) {
 			tags: promiseQueryKeys,
 		}
 	)
+
+	const breadcrumbs = pageData?.etfCategory?.translation?.seo?.breadcrumbs ?? []
+
+	const breadcrumbsItems = breadcrumbs.map(breadcrumb => ({
+		text: breadcrumb?.text ?? '',
+		url: breadcrumb?.url ?? '',
+	}))
 
 	return (
 		<>
@@ -100,11 +108,8 @@ export default async function Page({ searchParams }: Props) {
 					<div className="space-y-8">
 						<Prose>
 							<h1 className="text-center">
-								<Balancer>{pageTitle}</Balancer>
+								<Balancer>{pageData.etfCategory?.translation?.name}</Balancer>
 							</h1>
-							<p className="text-center">
-								<Balancer>{t('etfs_subtitle')}</Balancer>
-							</p>
 						</Prose>
 
 						<EtfsSearch />

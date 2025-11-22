@@ -1,0 +1,38 @@
+query GetEtfsByCategory($categorySlug: String!, $locale: LanguageCodeFilterEnum!) {
+	etfs(where: { etfCategory: $categorySlug, language: $locale }) {
+		nodes {
+			__typename
+			id
+			slug
+			etfCategories {
+				nodes {
+					name
+				}
+			}
+		}
+	}
+}
+
+query GetEtfCategory($slug: ID!, $locale: LanguageCodeEnum!) {
+	etfCategory(idType: SLUG, id: $slug) {
+		translation(language: $locale) {
+			name
+			link
+			uri
+
+			seo {
+				breadcrumbs {
+					__typename
+					text
+					url
+				}
+				title
+				metaDesc
+				metaRobotsNofollow
+				metaRobotsNoindex
+				canonical
+			}
+
+		}
+	}
+}

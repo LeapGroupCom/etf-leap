@@ -64,5 +64,9 @@
 	"year_placeholder": "Year",
 	"month_placeholder": "Month",
 	"breadcrumb_aria": "breadcrumb",
-	"breadcrumb_more": "More"
+	"breadcrumb_more": "More",
+	"etfs_search_title": "Search for ETFs",
+	"etfs_search_subtitle": "Start typing to find ETFs by name or ticker",
+	"etfs_search_empty_title": "Hmm, nothing found",
+	"etfs_search_empty_subtitle": "Try to search for something else"
 }

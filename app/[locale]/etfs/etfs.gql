@@ -2,16 +2,14 @@ query GetAllEtfs(
 	$locale: LanguageCodeFilterEnum!
 	$search: String = ""
 	$category: String = ""
-	$tag: String = ""
 	$pageSize: Int
-	$skip: Int
+	$skip: Int = 0
 ) {
 	etfs(
 		where: {
 			language: $locale
 			searchString: $search
 			etfCategory: $category
-			etfTag: $tag
 			offsetPagination: { size: $pageSize, offset: $skip }
 		}
 	) {
@@ -36,17 +34,6 @@ query GetAllEtfs(
 			cptEtfs {
 				symbol
 			}
-		}
-	}
-}
-
-query GetAllEtfsCategories {
-	etfCategories {
-		nodes {
-			__typename
-			id
-			slug
-			name
 		}
 	}
 }

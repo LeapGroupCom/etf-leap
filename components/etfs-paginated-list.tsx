@@ -1,7 +1,5 @@
 'use client'
 
-import { FilterEtfs } from '@/components/etfs-filter'
-import { SearchInput } from '@/components/search-input'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import {
@@ -13,7 +11,7 @@ import {
 	PaginationPrevious,
 } from '@/components/ui/pagination'
 import { Skeleton } from '@/components/ui/skeleton'
-import { GetAllEtfsCategoriesQuery, GetAllEtfsQuery, GetAllEtfsTagsQuery } from '@/graphql/generated/graphql'
+import { GetAllEtfsQuery } from '@/graphql/generated/graphql'
 import { Link } from '@/i18n/navigation'
 import { clamp } from '@/utils/math'
 import { createNumberList } from '@/utils/pagination'
@@ -22,45 +20,34 @@ import { useLocale, useTranslations } from 'next-intl'
 import { useSearchParams } from 'next/navigation'
 import { match, P } from 'ts-pattern'
 
-export const PAGE_SIZE_ETFS = 24
+// export const PAGE_SIZE_ETFS = 24
 export const NB_MAX_PAGES = 5
 export const STALE_TIME = 1000 * 60 * 5 // 5 minutes
 
 type Props = {
 	dataPromise: Promise<GetAllEtfsQuery>
-	filtersPromise: Promise<[GetAllEtfsCategoriesQuery, GetAllEtfsTagsQuery]>
+	pageSize: number
+	queryKeys?: string[]
 }
 
-export function PageClient({ dataPromise, filtersPromise }: Props) {
-	const locale = useLocale()
-	const searchParams = useSearchParams()
+export function EtfsPaginatedList({ dataPromise, pageSize, queryKeys }: Props) {
 	const t = useTranslations()
+	const locale = useLocale()
+	const urlParams = useSearchParams()
 
-	const search = searchParams.get('search') ?? ''
-	const category = searchParams.get('category') ?? ''
-	const tag = searchParams.get('tag') ?? ''
-	const pageParam = searchParams.get('page')
+	const pageParam = urlParams.get('page')
 	const pageNumber = pageParam ? parseInt(pageParam, 10) : 1
 
 	const { data, isLoading } = useQuery({
-		queryKey: ['etfs', search, category, tag, pageNumber, locale],
+		queryKey: [...(queryKeys ?? ['etfs']), pageNumber, locale],
 		queryFn: () => dataPromise,
 		placeholderData: keepPreviousData,
 		staleTime: STALE_TIME,
 	})
 
-	const { data: filtersData } = useQuery({
-		queryKey: ['etfs-filters'],
-		queryFn: () => filtersPromise,
-		placeholderData: keepPreviousData,
-		staleTime: STALE_TIME,
-	})
-
-	const [categoriesData, tagsData] = filtersData || []
-
 	const etfs = data?.etfs?.nodes
 	const totalPages = Math.ceil(
-		(data?.etfs?.pageInfo.offsetPagination?.total ?? etfs?.length ?? PAGE_SIZE_ETFS) / PAGE_SIZE_ETFS
+		(data?.etfs?.pageInfo.offsetPagination?.total ?? etfs?.length ?? pageSize) / pageSize
 	)
 
 	const nbNumberDisplayed = Math.min(totalPages, NB_MAX_PAGES)
@@ -72,48 +59,15 @@ export function PageClient({ dataPromise, filtersPromise }: Props) {
 	const createPaginationUrl = (newPage: number) => {
 		const params = new URLSearchParams()
 		if (newPage > 1) params.set('page', newPage.toString())
-		if (category) params.set('category', category)
-		if (tag) params.set('tag', tag)
-		if (search) params.set('search', search)
 		return `/etfs${params.toString() ? `?${params.toString()}` : ''}`
 	}
 
-	const categories =
-		categoriesData?.etfCategories?.nodes.map(category => ({
-			id: category.id,
-			name: category.name ?? '',
-			slug: category.slug ?? '',
-		})) ?? []
-	const tags =
-		tagsData?.etfTags?.nodes.map(tag => ({
-			id: tag.id,
-			name: tag.name ?? '',
-			slug: tag.slug ?? '',
-		})) ?? []
-
 	return (
 		<>
-			<div className="space-y-4">
-				{isLoading ? (
-					<Skeleton className="bg-card h-[14px] w-24" />
-				) : (
-					<>
-						<p className="text-muted-foreground text-sm leading-none">
-							{t('search_results_title', { count: etfs?.length ?? 0 })}
-							{search && ` ${t('search_results_subtitle')}`}
-						</p>
-					</>
-				)}
-
-				<SearchInput defaultValue={search} />
-
-				<FilterEtfs tags={tags} categories={categories} selectedTag={tag} selectedCategory={category} />
-			</div>
-
 			{match({ etfs, isLoading })
 				.with({ isLoading: true, etfs: P.nullish }, () => (
 					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-						{Array(PAGE_SIZE_ETFS)
+						{Array(pageSize)
 							.fill(null)
 							.map((_, index) => (
 								<Card key={index} className="h-[180px] bg-transparent p-0">
@@ -139,7 +93,6 @@ export function PageClient({ dataPromise, filtersPromise }: Props) {
 								<Button
 									size="lg"
 									asChild
-									// className="bg-primary/30 text-primary hover:text-primary-foreground mt-auto w-full border font-bold"
 									className="bg-primary/30 text-accent-foreground hover:text-primary-foreground mt-auto w-full border font-bold"
 								>
 									<Link prefetch={false} href={uri ?? ''}>
@@ -169,8 +122,8 @@ export function PageClient({ dataPromise, filtersPromise }: Props) {
 						</PaginationItem>
 
 						<div
-							className="relative mx-2 flex overflow-hidden"
-							style={{ width: (nbNumberDisplayed - 2) * 40 + addGap * 2, height: 40 }}
+							className="relative mx-2 flex overflow-hidden px-0.5 py-0.5"
+							style={{ width: (nbNumberDisplayed - 2) * 40 + addGap * 2 + 4, height: 44 }}
 						>
 							<div
 								className="absolute flex gap-1 transition-transform"
