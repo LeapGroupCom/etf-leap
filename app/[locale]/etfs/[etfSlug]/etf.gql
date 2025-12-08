@@ -17,6 +17,16 @@ query GetEtfBySlug($slug: ID!, $locale: LanguageCodeEnum!) {
 				content
 			}
 
+			etfCategories(first: 100) {
+				nodes {
+					id
+					name
+					uri
+					link
+					slug
+				}
+			}
+
 			seo {
 				title
 				metaDesc

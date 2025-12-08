@@ -1,4 +1,6 @@
 import {
+	GetAllEtfCategoriesForSitemapDocument,
+	GetAllEtfCategoriesForSitemapQuery,
 	GetAllEtfsForSitemapDocument,
 	GetAllEtfsForSitemapQuery,
 	GetAllPagesForSitemapDocument,
@@ -13,7 +15,7 @@ import type { MetadataRoute } from 'next'
 import { NextResponse } from 'next/server'
 import { match } from 'ts-pattern'
 
-export const revalidate = 86400 // 24 hours
+export const revalidate = 21600 // 6 hours
 
 export async function GET(request: Request, { params }: { params: Promise<{ sitemapId: string }> }) {
 	const { sitemapId } = await params
@@ -21,6 +23,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ site
 	const entries = await match(sitemapId as SitemapTypeXml)
 		.with('pages-sitemap.xml', async () => generatePagesSitemap(['en']))
 		.with('etfs-sitemap.xml', async () => generateEtfsSitemap(['en']))
+		.with('etf-categories-sitemap.xml', async () => generateEtfCategoriesSitemap(['en']))
 		.exhaustive()
 
 	const xml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -59,9 +62,17 @@ const generateEtfsSitemap = async (locales: typeof routing.locales) => {
 	return generateXmlMarkup(etfEntries)
 }
 
+const generateEtfCategoriesSitemap = async (locales: typeof routing.locales) => {
+	const etfCategories = await getEtfCategoriesRecords(locales.map(locale => locale.toUpperCase() as LanguageCodeEnum))
+	const etfCategoryEntries: MetadataRoute.Sitemap = parseEntries(etfCategories)
+
+	return generateXmlMarkup(etfCategoryEntries)
+}
+
 type ParseEntriesProps =
 	| NonNullable<GetAllPagesForSitemapQuery['pages']>['nodes']
 	| NonNullable<GetAllEtfsForSitemapQuery['etfs']>['nodes']
+	| NonNullable<GetAllEtfCategoriesForSitemapQuery['etfCategories']>['nodes']
 
 const parseEntries = (entries: ParseEntriesProps) => {
 	const base = serverEnv.NEXT_PUBLIC_SITE_URL
@@ -75,17 +86,20 @@ const parseEntries = (entries: ParseEntriesProps) => {
 			.exhaustive()
 
 		return match(i)
-			.with({ __typename: 'Page', isFrontPage: true }, () => ({
+			.with({ __typename: 'Page', isFrontPage: true }, (data) => ({
 				url: `${base}${localePrefix}`,
-				lastModified: new Date(i.date ?? '').toISOString(),
+				lastModified: new Date(data.date ?? '').toISOString(),
 			}))
-			.with({ __typename: 'Page' }, () => ({
-				url: `${base}${localePrefix}${i.uri}`,
-				lastModified: new Date(i.date ?? '').toISOString(),
+			.with({ __typename: 'Page' }, (data) => ({
+				url: `${base}${localePrefix}${data.uri}`,
+				lastModified: new Date(data.date ?? '').toISOString(),
 			}))
-			.otherwise(() => ({
-				url: `${base}${localePrefix}${i.uri}`,
-				lastModified: new Date(i.date ?? '').toISOString(),
+			.with({ __typename: 'EtfCategory' }, (data) => ({
+				url: `${base}${localePrefix}${data.uri}`,
+			}))
+			.otherwise((data) => ({
+				url: `${base}${localePrefix}${data.uri}`,
+				lastModified: new Date(data.date ?? '').toISOString(),
 			}))
 	})
 }
@@ -118,6 +132,34 @@ async function getEtfsRecords(locales: LanguageCodeEnum[]): Promise<NonNullable<
 		)
 
 		const nodes = items?.etfs?.nodes ?? []
+
+		if (nodes.length < PAGE_SIZE) {
+			return [...allRecords, ...nodes]
+		}
+
+		return loadRecords([...allRecords, ...nodes], page + 1)
+	}
+
+	return loadRecords([], 1)
+}
+
+async function getEtfCategoriesRecords(locales: LanguageCodeEnum[]): Promise<NonNullable<GetAllEtfCategoriesForSitemapQuery['etfCategories']>['nodes']> {
+	const PAGE_SIZE = 100
+
+	const loadRecords = async (allRecords: any[], page: number): Promise<any[]> => {
+		const items = await fetchGraphQL(
+			GetAllEtfCategoriesForSitemapDocument,
+			{
+				pageSize: PAGE_SIZE,
+				offset: (page - 1) * PAGE_SIZE,
+				locales,
+			},
+			{
+				tags: ['etf-categories-sitemap'],
+			}
+		)
+
+		const nodes = items?.etfCategories?.nodes ?? []
 
 		if (nodes.length < PAGE_SIZE) {
 			return [...allRecords, ...nodes]

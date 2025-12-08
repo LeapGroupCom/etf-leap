@@ -2,6 +2,8 @@ import { Breadcrumbs } from '@/components/breadcrumbs'
 import { Container, Prose, Section } from '@/components/craft'
 import { EtfCalculator } from '@/components/etf-calculator'
 import { EtfCalculatorClientSkeleton } from '@/components/etf-calculator/etf-calculator-client'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent } from '@/components/ui/card'
 import { GetAllEtfsLocalesDocument, GetEtfBySlugDocument, LanguageCodeEnum } from '@/graphql/generated/graphql'
 import { cn } from '@/lib/utils'
 import { serverEnv } from '@/serverEnv'
@@ -9,6 +11,7 @@ import { fetchGraphQL } from '@/utils/fetchGraphQL'
 import { isNotEmpty, isNotNullish } from '@/utils/types'
 import type { Metadata } from 'next'
 import { getLocale } from 'next-intl/server'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
 import Balancer from 'react-wrap-balancer'
@@ -121,6 +124,24 @@ export default async function Page({ params }: PageProps<'/[locale]/etfs/[etfSlu
 							<EtfCalculator ticker={ticker} />
 						</Suspense>
 					</section>
+
+					{!!etf.etfCategories?.nodes?.length && (
+						<Card className="mt-6 border-none py-4">
+							<CardContent className="flex flex-wrap items-center gap-3">
+								{etf.etfCategories?.nodes?.map(category => (
+									<Badge key={category.id} variant="outline" className="px-3 py-1" asChild>
+										<Link
+											href={{
+												pathname: `/etfs/categories/${category.slug}`,
+											}}
+										>
+											{category.name}
+										</Link>
+									</Badge>
+								))}
+							</CardContent>
+						</Card>
+					)}
 
 					<div className="mt-12">
 						{pageContent && (

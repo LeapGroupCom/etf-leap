@@ -32,7 +32,21 @@ query GetEtfCategory($slug: ID!, $locale: LanguageCodeEnum!) {
 				metaRobotsNoindex
 				canonical
 			}
+		}
+	}
+}
 
+query GetAllEtfCategoriesForSitemap($pageSize: Int, $offset: Int, $locales: [LanguageCodeEnum!]!) {
+	etfCategories(where: { offsetPagination: { size: $pageSize, offset: $offset }, languages: $locales }) {
+		nodes {
+			__typename
+			id
+			slug
+			uri
+			language {
+				code
+				slug
+			}
 		}
 	}
 }
