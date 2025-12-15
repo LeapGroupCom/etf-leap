@@ -19,7 +19,7 @@
 	"hero_image": "Hero Image",
 	"visit_site": "Visit Site",
 	"footer_description": "Lorem ipsum dolor sit amet consectetur.",
-	"footer_copyright": "© ETFleap. All rights reserved. 2025-present.",
+	"footer_copyright": "© ETFleap. All rights reserved. {year}",
 	"calculator_future_projection": "Future Projection",
 	"calculator_historical_growth": "Historical Growth",
 	"calculator_initial_investment": "Initial Investment",

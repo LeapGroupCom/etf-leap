@@ -20,17 +20,15 @@ import { useLocale, useTranslations } from 'next-intl'
 import { useSearchParams } from 'next/navigation'
 import { match, P } from 'ts-pattern'
 
-// export const PAGE_SIZE_ETFS = 24
 export const NB_MAX_PAGES = 5
 export const STALE_TIME = 1000 * 60 * 5 // 5 minutes
 
 type Props = {
 	dataPromise: Promise<GetAllEtfsQuery>
 	pageSize: number
-	queryKeys?: string[]
 }
 
-export function EtfsPaginatedList({ dataPromise, pageSize, queryKeys }: Props) {
+export function EtfsPaginatedList({ dataPromise, pageSize }: Props) {
 	const t = useTranslations()
 	const locale = useLocale()
 	const urlParams = useSearchParams()
@@ -39,16 +37,14 @@ export function EtfsPaginatedList({ dataPromise, pageSize, queryKeys }: Props) {
 	const pageNumber = pageParam ? parseInt(pageParam, 10) : 1
 
 	const { data, isLoading } = useQuery({
-		queryKey: [...(queryKeys ?? ['etfs']), pageNumber, locale],
+		queryKey: ['etfs', pageNumber, locale],
 		queryFn: () => dataPromise,
 		placeholderData: keepPreviousData,
 		staleTime: STALE_TIME,
 	})
 
 	const etfs = data?.etfs?.nodes
-	const totalPages = Math.ceil(
-		(data?.etfs?.pageInfo.offsetPagination?.total ?? etfs?.length ?? pageSize) / pageSize
-	)
+	const totalPages = Math.ceil((data?.etfs?.pageInfo.offsetPagination?.total ?? etfs?.length ?? pageSize) / pageSize)
 
 	const nbNumberDisplayed = Math.min(totalPages, NB_MAX_PAGES)
 	const nbMaxTranslations = Math.max(totalPages - NB_MAX_PAGES, 0)

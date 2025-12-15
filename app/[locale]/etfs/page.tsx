@@ -49,7 +49,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 
 export const dynamic = 'auto'
 export const revalidate = 600
-const PAGE_SIZE_ETFS = 40
+const PAGE_SIZE_ETFS = 24
 
 export default async function Page({ searchParams }: Props) {
 	const params = await searchParams
@@ -78,18 +78,11 @@ export default async function Page({ searchParams }: Props) {
 
 	const pageTitle = pageData?.page?.translation?.title ?? t('etfs_title')
 
-	const promiseQueryKeys = ['etfs']
-	const dataPromise = fetchGraphQL(
-		GetAllEtfsDocument,
-		{
-			locale: locale.toUpperCase() as LanguageCodeEnum,
-			pageSize: PAGE_SIZE_ETFS,
-			skip: (pageNumber - 1) * PAGE_SIZE_ETFS,
-		},
-		{
-			tags: promiseQueryKeys,
-		}
-	)
+	const dataPromise = fetchGraphQL(GetAllEtfsDocument, {
+		locale: locale.toUpperCase() as LanguageCodeEnum,
+		pageSize: PAGE_SIZE_ETFS,
+		skip: (pageNumber - 1) * PAGE_SIZE_ETFS,
+	})
 
 	return (
 		<>
@@ -109,7 +102,7 @@ export default async function Page({ searchParams }: Props) {
 
 						<EtfsSearch />
 
-						<EtfsPaginatedList dataPromise={dataPromise} pageSize={PAGE_SIZE_ETFS} queryKeys={promiseQueryKeys} />
+						<EtfsPaginatedList dataPromise={dataPromise} pageSize={PAGE_SIZE_ETFS} />
 					</div>
 				</Container>
 			</Section>
