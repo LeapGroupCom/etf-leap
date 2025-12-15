@@ -78,6 +78,7 @@ export default async function Page({ searchParams }: Props) {
 
 	const pageTitle = pageData?.page?.translation?.title ?? t('etfs_title')
 
+	const promiseQueryKeys = ['etfs']
 	const dataPromise = fetchGraphQL(GetAllEtfsDocument, {
 		locale: locale.toUpperCase() as LanguageCodeEnum,
 		pageSize: PAGE_SIZE_ETFS,
@@ -102,7 +103,7 @@ export default async function Page({ searchParams }: Props) {
 
 						<EtfsSearch />
 
-						<EtfsPaginatedList dataPromise={dataPromise} pageSize={PAGE_SIZE_ETFS} />
+						<EtfsPaginatedList dataPromise={dataPromise} queryKeys={promiseQueryKeys} pageSize={PAGE_SIZE_ETFS} />
 					</div>
 				</Container>
 			</Section>

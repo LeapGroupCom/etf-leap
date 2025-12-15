@@ -26,9 +26,10 @@ export const STALE_TIME = 1000 * 60 * 5 // 5 minutes
 type Props = {
 	dataPromise: Promise<GetAllEtfsQuery>
 	pageSize: number
+	queryKeys?: string[]
 }
 
-export function EtfsPaginatedList({ dataPromise, pageSize }: Props) {
+export function EtfsPaginatedList({ dataPromise, pageSize, queryKeys }: Props) {
 	const t = useTranslations()
 	const locale = useLocale()
 	const urlParams = useSearchParams()
@@ -37,7 +38,7 @@ export function EtfsPaginatedList({ dataPromise, pageSize }: Props) {
 	const pageNumber = pageParam ? parseInt(pageParam, 10) : 1
 
 	const { data, isLoading } = useQuery({
-		queryKey: ['etfs', pageNumber, locale],
+		queryKey: [...(queryKeys ?? ['etfs']), pageNumber, locale],
 		queryFn: () => dataPromise,
 		placeholderData: keepPreviousData,
 		staleTime: STALE_TIME,
