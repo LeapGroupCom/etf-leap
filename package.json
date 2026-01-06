@@ -17,7 +17,8 @@
     "start": "next start",
     "lint": "next lint",
     "codegen": "pnpm toggle-env-server-only && graphql-codegen --config codegen.ts && pnpm toggle-env-server-only",
-    "toggle-env-server-only": "tsx lib/scripts/toggle-server-only.ts serverEnv.ts"
+    "toggle-env-server-only": "tsx lib/scripts/toggle-server-only.ts serverEnv.ts",
+    "check-types": "pnpm tsc --noEmit"
   },
   "dependencies": {
     "@formatjs/intl-localematcher": "^0.6.1",
@@ -45,7 +46,7 @@
     "html-react-parser": "^5.2.5",
     "leo-query": "^0.4.1",
     "lucide-react": "^0.544.0",
-    "motion": "^12.23.12",
+    "motion": "^12.24.7",
     "negotiator": "^1.0.0",
     "next": "16.0.10",
     "next-intl": "^4.5.8",

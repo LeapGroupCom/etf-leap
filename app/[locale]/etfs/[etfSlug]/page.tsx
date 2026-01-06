@@ -1,7 +1,7 @@
 import { Breadcrumbs } from '@/components/breadcrumbs'
 import { Container, Prose, Section } from '@/components/craft'
-import { EtfCalculator } from '@/components/etf-calculator'
-import { EtfCalculatorClientSkeleton } from '@/components/etf-calculator/etf-calculator-client'
+import { EtfCalculatorClient } from '@/components/etf-calculator/etf-calculator-client'
+import { EtfCalcStoreProvider } from '@/components/etf-calculator/provider'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { GetAllEtfsLocalesDocument, GetEtfBySlugDocument, LanguageCodeEnum } from '@/graphql/generated/graphql'
@@ -13,7 +13,6 @@ import type { Metadata } from 'next'
 import { getLocale } from 'next-intl/server'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { Suspense } from 'react'
 import Balancer from 'react-wrap-balancer'
 
 export async function generateStaticParams() {
@@ -103,6 +102,10 @@ export default async function Page({ params }: PageProps<'/[locale]/etfs/[etfSlu
 			url: breadcrumb?.url ?? '',
 		})) ?? []
 
+	const estDividendYield = etf.cptEtfs?.yield ?? 0
+	const estTotalReturn = etf.cptEtfs?.tenYearReturn ?? 0
+	const expenseRatio = etf.cptEtfs?.annualReportExpenseRatio ?? 0
+
 	return (
 		<>
 			{breadcrumbsItems.length > 0 && <Breadcrumbs items={breadcrumbsItems} />}
@@ -119,11 +122,11 @@ export default async function Page({ params }: PageProps<'/[locale]/etfs/[etfSlu
 						</p>
 					)}
 
-					<section className="mt-12">
-						<Suspense fallback={<EtfCalculatorClientSkeleton />}>
-							<EtfCalculator ticker={ticker} />
-						</Suspense>
-					</section>
+					<div className="mt-12">
+						<EtfCalcStoreProvider serverSideData={{ estTotalReturn, estDividendYield, ticker, expenseRatio }}>
+							<EtfCalculatorClient />
+						</EtfCalcStoreProvider>
+					</div>
 
 					{!!etf.etfCategories?.nodes?.length && (
 						<Card className="mt-6 border-none py-4">

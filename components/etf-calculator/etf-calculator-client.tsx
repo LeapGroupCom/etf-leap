@@ -2,10 +2,9 @@
 
 import { Card, CardContent } from '@/components/ui/card'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-import { AnimatePresence, motion } from 'motion/react'
+import { AnimatePresence } from 'motion/react'
 import { useTranslations } from 'next-intl'
-import { useEffect, useState } from 'react'
-import { match } from 'ts-pattern'
+import { Activity, useEffect, useState } from 'react'
 import { Skeleton } from '../ui/skeleton'
 import { FutureProjection } from './future-projection'
 import { HistoricalGrowth } from './historical-growth'
@@ -67,7 +66,15 @@ export function EtfCalculatorClient() {
 					</ToggleGroup>
 
 					<AnimatePresence mode="wait">
-						{match(mode)
+						<Activity key="future-projection" mode={mode === 'future-projection' ? 'visible' : 'hidden'}>
+							<FutureProjection />
+						</Activity>
+
+						<Activity key="historical-growth" mode={mode === 'historical-growth' ? 'visible' : 'hidden'}>
+							<HistoricalGrowth />
+						</Activity>
+
+						{/* {match(mode)
 							.with('future-projection', activeTab => (
 								<motion.div
 									key={mode}
@@ -92,7 +99,7 @@ export function EtfCalculatorClient() {
 									<HistoricalGrowth />
 								</motion.div>
 							))
-							.exhaustive()}
+							.exhaustive()} */}
 					</AnimatePresence>
 				</CardContent>
 			</Card>
@@ -101,7 +108,7 @@ export function EtfCalculatorClient() {
 }
 
 export const EtfCalculatorClientSkeleton = () => (
-	<Card className="h-[1664px] sm:h-[1692px] md:h-[1334px] lg:h-[1372px] overflow-hidden border-none bg-transparent p-0">
+	<Card className="h-[1664px] overflow-hidden border-none bg-transparent p-0 sm:h-[1692px] md:h-[1334px] lg:h-[1372px]">
 		<Skeleton className="bg-card h-full w-full" />
 	</Card>
 )

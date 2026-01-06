@@ -10,6 +10,9 @@ query GetEtfBySlug($slug: ID!, $locale: LanguageCodeEnum!) {
 
 			cptEtfs {
 				symbol
+				yield
+				annualReportExpenseRatio
+				tenYearReturn
 			}
 
 			cptEtfContent {
