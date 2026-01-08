@@ -1,6 +1,9 @@
+import { clientEnv } from '@/clientEnv'
 import { Link } from '@/i18n/navigation'
 import { SlashIcon } from 'lucide-react'
 import { Fragment } from 'react'
+import { JsonLd } from 'react-schemaorg'
+import { BreadcrumbList as BreadcrumbListSchema } from 'schema-dts'
 import { Container } from './craft'
 import { BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from './ui/breadcrumb'
 
@@ -13,33 +16,50 @@ type Props = {
 
 export async function Breadcrumbs({ items }: Props) {
 	return (
-		<div className="bg-background sticky top-[73px] z-50 border-b py-1">
-			<Container>
-				<BreadcrumbList>
-					{items.map((item, index) => {
-						const isLast = index + 1 === items.length
+		<>
+			<div className="bg-background sticky top-[73px] z-50 border-b py-1">
+				<Container>
+					<BreadcrumbList>
+						{items.map((item, index) => {
+							const isLast = index + 1 === items.length
 
-						return (
-							<Fragment key={index}>
-								{isLast ? (
-									<BreadcrumbItem className="font-bold">{item.text}</BreadcrumbItem>
-								) : (
-									<>
-										<BreadcrumbItem>
-											<BreadcrumbLink asChild>
-												<Link href={item.url}>{item.text}</Link>
-											</BreadcrumbLink>
-										</BreadcrumbItem>
-										<BreadcrumbSeparator>
-											<SlashIcon />
-										</BreadcrumbSeparator>
-									</>
-								)}
-							</Fragment>
-						)
-					})}
-				</BreadcrumbList>
-			</Container>
-		</div>
+							return (
+								<Fragment key={index}>
+									{isLast ? (
+										<BreadcrumbItem className="font-bold">{item.text}</BreadcrumbItem>
+									) : (
+										<>
+											<BreadcrumbItem>
+												<BreadcrumbLink asChild>
+													<Link href={item.url}>{item.text}</Link>
+												</BreadcrumbLink>
+											</BreadcrumbItem>
+											<BreadcrumbSeparator>
+												<SlashIcon />
+											</BreadcrumbSeparator>
+										</>
+									)}
+								</Fragment>
+							)
+						})}
+					</BreadcrumbList>
+				</Container>
+			</div>
+
+			<JsonLd<BreadcrumbListSchema>
+				item={{
+					'@context': 'https://schema.org',
+					'@type': 'BreadcrumbList',
+					itemListElement: items.map(({ text, url }, index) => {
+						return {
+							'@type': 'ListItem',
+							position: index + 1,
+							name: text,
+							item: `${clientEnv.NEXT_PUBLIC_SITE_URL}${url}`,
+						}
+					}),
+				}}
+			/>
+		</>
 	)
 }

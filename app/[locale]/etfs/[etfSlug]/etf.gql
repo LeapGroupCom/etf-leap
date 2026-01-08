@@ -13,6 +13,15 @@ query GetEtfBySlug($slug: ID!, $locale: LanguageCodeEnum!) {
 				yield
 				annualReportExpenseRatio
 				tenYearReturn
+				dividends {
+					date
+					amount
+				}
+				holdings {
+					companyName
+					assetsPercent
+					symbol
+				}
 			}
 
 			cptEtfContent {

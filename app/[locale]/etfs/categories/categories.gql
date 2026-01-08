@@ -1,0 +1,12 @@
+query GetEtfCategories($locale: LanguageCodeFilterEnum!) {
+	etfCategories(where: { language: $locale }) {
+		nodes {
+			__typename
+			id
+			name
+			link
+			uri
+			slug
+		}
+	}
+}

@@ -1,10 +1,13 @@
+import { clientEnv } from '@/clientEnv'
 import { Breadcrumbs } from '@/components/breadcrumbs'
 import { Container, Prose, Section } from '@/components/craft'
 import { EtfCalculatorClient } from '@/components/etf-calculator/etf-calculator-client'
 import { EtfCalcStoreProvider } from '@/components/etf-calculator/provider'
+import { Faq } from '@/components/faq'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { GetAllEtfsLocalesDocument, GetEtfBySlugDocument, LanguageCodeEnum } from '@/graphql/generated/graphql'
+import { generateEtfFaqItems } from '@/lib/faq'
 import { cn } from '@/lib/utils'
 import { serverEnv } from '@/serverEnv'
 import { fetchGraphQL } from '@/utils/fetchGraphQL'
@@ -13,7 +16,9 @@ import type { Metadata } from 'next'
 import { getLocale } from 'next-intl/server'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { JsonLd } from 'react-schemaorg'
 import Balancer from 'react-wrap-balancer'
+import { FinancialProduct, WebApplication } from 'schema-dts'
 
 export async function generateStaticParams() {
 	const data = await fetchGraphQL(GetAllEtfsLocalesDocument)
@@ -105,6 +110,19 @@ export default async function Page({ params }: PageProps<'/[locale]/etfs/[etfSlu
 	const estDividendYield = etf.cptEtfs?.yield ?? 0
 	const estTotalReturn = etf.cptEtfs?.tenYearReturn ?? 0
 	const expenseRatio = etf.cptEtfs?.annualReportExpenseRatio ?? 0
+	const dividends =
+		etf.cptEtfs?.dividends?.filter(isNotNullish).map(d => ({
+			date: d.date ?? '',
+			amount: d.amount ?? 0,
+		})) ?? []
+	const holdings =
+		etf.cptEtfs?.holdings?.filter(isNotNullish).map(h => ({
+			companyName: h.companyName ?? '',
+			assetsPercent: h.assetsPercent ?? 0,
+			symbol: h.symbol ?? '',
+		})) ?? []
+
+	const faqItems = generateEtfFaqItems({ ticker, tenYearReturn: estTotalReturn, dividends, holdings })
 
 	return (
 		<>
@@ -146,8 +164,8 @@ export default async function Page({ params }: PageProps<'/[locale]/etfs/[etfSlu
 						</Card>
 					)}
 
-					<div className="mt-12">
-						{pageContent && (
+					{pageContent && (
+						<div className="mt-12">
 							<Prose>
 								<div
 									id="seo-text"
@@ -158,10 +176,36 @@ export default async function Page({ params }: PageProps<'/[locale]/etfs/[etfSlu
 									dangerouslySetInnerHTML={{ __html: pageContent ?? '' }}
 								/>
 							</Prose>
-						)}
-					</div>
+						</div>
+					)}
+
+					<Faq items={faqItems} />
 				</Container>
 			</Section>
+
+			<JsonLd<WebApplication>
+				item={{
+					'@context': 'https://schema.org',
+					'@type': 'WebApplication',
+					name: etf.title!,
+					description: `Calculates the potential future value of an investment in the ${etf.title} based on user-defined inputs for initial investment, regular contributions, and estimated annual growth rate. It also provides historical estimates, showing how much an investor would have earned by starting at different points in the past.`,
+					applicationCategory: 'FinanceApplication',
+					operatingSystem: 'Web-based',
+					provider: {
+						'@type': 'Organization',
+						name: 'ETFLeap.com',
+						url: clientEnv.NEXT_PUBLIC_SITE_URL,
+					},
+				}}
+			/>
+
+			<JsonLd<FinancialProduct>
+				item={{
+					'@context': 'https://schema.org',
+					'@type': 'FinancialProduct',
+					name: etf.title!,
+				}}
+			/>
 		</>
 	)
 }
