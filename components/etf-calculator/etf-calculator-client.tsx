@@ -2,7 +2,6 @@
 
 import { Card, CardContent } from '@/components/ui/card'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-import { AnimatePresence } from 'motion/react'
 import { useTranslations } from 'next-intl'
 import { Activity, useEffect, useState } from 'react'
 import { Skeleton } from '../ui/skeleton'
@@ -65,42 +64,13 @@ export function EtfCalculatorClient() {
 						</ToggleGroupItem>
 					</ToggleGroup>
 
-					<AnimatePresence mode="wait">
-						<Activity key="future-projection" mode={mode === 'future-projection' ? 'visible' : 'hidden'}>
-							<FutureProjection />
-						</Activity>
+					<Activity mode={mode === 'future-projection' ? 'visible' : 'hidden'}>
+						<FutureProjection />
+					</Activity>
 
-						<Activity key="historical-growth" mode={mode === 'historical-growth' ? 'visible' : 'hidden'}>
-							<HistoricalGrowth />
-						</Activity>
-
-						{/* {match(mode)
-							.with('future-projection', activeTab => (
-								<motion.div
-									key={mode}
-									variants={paneVariants({ isClient, activeTab })}
-									initial="initial"
-									animate="enter"
-									exit="exit"
-									transition={{ duration: 0.2 }}
-								>
-									<FutureProjection />
-								</motion.div>
-							))
-							.with('historical-growth', activeTab => (
-								<motion.div
-									key={mode}
-									variants={paneVariants({ isClient, activeTab })}
-									initial="initial"
-									animate="enter"
-									exit="exit"
-									transition={{ duration: 0.2 }}
-								>
-									<HistoricalGrowth />
-								</motion.div>
-							))
-							.exhaustive()} */}
-					</AnimatePresence>
+					<Activity mode={mode === 'historical-growth' ? 'visible' : 'hidden'}>
+						<HistoricalGrowth />
+					</Activity>
 				</CardContent>
 			</Card>
 		</>
