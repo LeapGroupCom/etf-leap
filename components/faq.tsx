@@ -4,6 +4,7 @@ import { FAQPage } from 'schema-dts'
 import { Prose } from './craft'
 import { Badge } from './ui/badge'
 import { Separator } from './ui/separator'
+import { parseToPlainText } from '@/utils/parser'
 
 type Props = {
 	items: {
@@ -56,10 +57,10 @@ export function Faq({ items }: Props) {
 					mainEntity: items.map(({ question, answer }) => {
 						return {
 							'@type': 'Question',
-							name: question as string,
+							name: parseToPlainText(question as string),
 							acceptedAnswer: {
 								'@type': 'Answer',
-								text: answer,
+								text: parseToPlainText(answer),
 							},
 						}
 					}),
