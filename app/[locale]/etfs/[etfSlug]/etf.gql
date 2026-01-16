@@ -46,6 +46,8 @@ query GetEtfBySlug($slug: ID!, $locale: LanguageCodeEnum!) {
 					url
 					text
 				}
+				metaRobotsNoindex
+				metaRobotsNofollow
 			}
 		}
 	}

@@ -51,6 +51,9 @@ export async function generateMetadata({ params }: PageProps<'/[locale]/etfs/[et
 	const description = etf.seo?.metaDesc?.replace(/<[^>]*>/g, '').trim()
 	ogUrl.searchParams.append('description', description ?? '')
 
+	const index = etf.seo?.metaRobotsNoindex === 'index' ? true : false
+	const follow = etf.seo?.metaRobotsNofollow === 'follow' ? true : false
+
 	return {
 		title: etf.seo?.title ?? '',
 		description: etf.seo?.metaDesc ?? '',
@@ -73,6 +76,10 @@ export async function generateMetadata({ params }: PageProps<'/[locale]/etfs/[et
 			title: etf.seo?.title ?? '',
 			description: etf.seo?.metaDesc ?? '',
 			images: [ogUrl.toString()],
+		},
+		robots: {
+			index,
+			follow,
 		},
 	}
 }

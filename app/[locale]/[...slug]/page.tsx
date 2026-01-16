@@ -10,24 +10,6 @@ import { notFound } from 'next/navigation'
 // Revalidate pages every hour
 export const revalidate = 3600
 
-// export async function generateStaticParams() {
-// 	const data = await fetchGraphQL(GetAllPagesDocument)
-
-// 	const pages = data?.pages?.nodes ?? []
-
-// 	console.log('pages', pages);
-
-// 	// if (pages.length === 0) {
-// 		return []
-// 	// }
-
-// 	return pages
-// 		?.filter(page => page.slug !== 'home')
-// 		.map(page => ({
-// 			slug: page.slug,
-// 		}))
-// }
-
 export async function generateMetadata({ params }: PageProps<'/[locale]/[...slug]'>): Promise<Metadata> {
 	const { slug } = await params
 	const locale = await getLocale()
@@ -47,6 +29,9 @@ export async function generateMetadata({ params }: PageProps<'/[locale]/[...slug
 	// Strip HTML tags for description
 	const description = page.seo?.metaDesc?.replace(/<[^>]*>/g, '').trim()
 	ogUrl.searchParams.append('description', description ?? '')
+
+	const index = page.seo?.metaRobotsNoindex === 'index' ? true : false
+	const follow = page.seo?.metaRobotsNofollow === 'follow' ? true : false
 
 	return {
 		title: page.seo?.title ?? '',
@@ -70,6 +55,10 @@ export async function generateMetadata({ params }: PageProps<'/[locale]/[...slug
 			title: page.seo?.title ?? '',
 			description: page.seo?.metaDesc ?? '',
 			images: [ogUrl.toString()],
+		},
+		robots: {
+			index,
+			follow,
 		},
 	}
 }

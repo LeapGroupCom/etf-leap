@@ -8,6 +8,7 @@ const config: CodegenConfig = {
 		[`${serverEnv.WORDPRESS_URL}/graphql`]: {
 			headers: {
 				'Content-Type': 'application/json',
+				Authorization: `Basic ${Buffer.from(`${serverEnv.WP_USER}:${serverEnv.WP_APP_PASSWORD}`).toString('base64')}`,
 			},
 		},
 	},

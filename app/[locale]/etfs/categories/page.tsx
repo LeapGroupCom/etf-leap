@@ -17,7 +17,6 @@ type Props = {
 
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
 	const { page: pageParam } = await searchParams
-	const isIndex = isNullish(pageParam)
 
 	const locale = await getLocale()
 
@@ -38,12 +37,15 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 		return {}
 	}
 
+	const index = isNullish(pageParam) && page.seo?.metaRobotsNoindex === 'index' ? true : false
+	const follow = page.seo?.metaRobotsNofollow === 'follow' ? true : false
+
 	return {
 		title: page.seo?.title,
 		description: page.seo?.metaDesc,
 		robots: {
-			index: isIndex,
-			follow: true,
+			index,
+			follow,
 		},
 	}
 }
